@@ -57,7 +57,10 @@ def login(user, secret):
     # Post username and password and get authorization url
     auth_resp = sess.post(post_url, data = post_data(sess, soup, user, secret))
     soup = BeautifulSoup(auth_resp.text, 'html.parser')
-    auth_url = soup.find('meta', {'http-equiv':'refresh'})['content'].split('url=')[1]
+    try:
+        auth_url = soup.find('meta', {'http-equiv':'refresh'})['content'].split('url=')[1]
+    except TypeError:
+        raise AssertionError("Username or password or captcha is wrong.")
 
     # Get authorized
     sess.get(auth_url)
