@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 import requests
 from itertools import count
 
+# TODO:
+#   1. Try to grab courses directly.(not step by step from main page)
+
 # When in main page (aka path /)
 TARGET_URL = 'http://electsys.sjtu.edu.cn/edu/'
 ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION']
@@ -39,11 +42,14 @@ def crowd_into_main(sess, query):
     form = prepare_form(sess, query)
     while True:
         try:
+            # if any item of asp.net form missing we will get electwarning.aspx
+            assert len(form) >= 5
             resp = sess.post(xkurl, data = form)
             resp.raise_for_status()
             if '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' not in resp.url:
                 return sess, resp
         except requests.exceptions.HTTPError:
+            print('Form updated')
             form = prepare_form(sess, query)
 
     ''' For debugging purpose'''
@@ -61,8 +67,6 @@ def asp_form(sess, url):
     soup = BeautifulSoup(sess.get(url).text, 'html.parser')
     return {inp['name']: inp['value'] for inp in soup.find_all('input') if
             inp['name'] in ASP_FORM_ID}
-    # return [(s, form[s]) for s in ['__VIEWSTATE', '__VIEWSTATEGENERATOR', 
-    #     '__EVENTVALIDATION', 'CheckBox1', 'btnContinue']]
 
 # update ASP.NET validation
 def prepare_form(sess, query):

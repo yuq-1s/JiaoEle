@@ -15,6 +15,7 @@ from pdb import set_trace
 from bs4 import BeautifulSoup
 from PIL import Image
 from io import BytesIO
+from pytesseract import image_to_string
 
 def tohttps(oriurl):
     prot, body = resp.request.url.split(':')
@@ -30,9 +31,7 @@ def captcha_src(soup):
 def input_captcha(sess, soup):
     r = sess.get('https://jaccount.sjtu.edu.cn/jaccount/'+captcha_src(soup),
             stream=True)
-    img = Image.open(BytesIO(r.content))
-    img.show()
-    return input('What\'s in the image?\n')
+    return image_to_string(Image.open(BytesIO(r.content)))
 
 def post_data(sess, soup, user, secret):
     form = ['sid', 'returl', 'se', 'v']
@@ -65,6 +64,7 @@ def login(user, secret):
     # Get authorized
     sess.get(auth_url)
 
+    print("Login succeeded")
     return sess# , prepare_form(sess)
 
 # def check_session(sess):
