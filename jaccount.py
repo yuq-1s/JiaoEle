@@ -65,15 +65,19 @@ def login(user, secret):
             sess.get(auth_url)
 
             logger.info("Login succeeded!")
-            return sess# , prepare_form(sess)
+            return prepare_cookie(sess)# , prepare_form(sess)
         except TypeError:
             logger.warning("The %d attempt to login failed ..." % try_count)
     logger.error("Login failed...")
     print("Are you sure about the username and password?")
     exit(1)
 
+def prepare_cookie(sess):
+    ele_cookies_list = ['ASP.NET_SessionId', 'mail_test_cookie']
+    return {s: sess.cookies[s] for s in ele_cookies_list}
+
 if __name__ == '__main__':
-    print(login(argv[1], argv[2]).cookies)
+    print(prepare_cookie(login(argv[1], argv[2])))
 
 # def check_session(sess):
 #     check_list = ['ASP.NET_SessionId', 'JASiteCookie', 'mail_test_cookie']

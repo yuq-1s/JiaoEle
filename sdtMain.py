@@ -7,7 +7,7 @@ from logging import getLogger, StreamHandler, Formatter, DEBUG
 from itertools import count
 from functools import wraps
 from sys import stdout
-from urllib.parse import urlencode, urldecode
+from urllib.parse import urlencode, urlparse
 
 # TODO:
 #   1. Try to grab courses directly.(not step by step from main page)
@@ -15,6 +15,9 @@ from urllib.parse import urlencode, urldecode
 # When in main page (aka path /)
 ELECT_URL = 'http://electsys.sjtu.edu.cn/edu/student/elect/'
 LESSON_URL = 'http://electsys.sjtu.edu.cn/edu/lesson/'
+# MAIN_PAGE_URL = ELECT_URL+'sltFromRcommandTbl.aspx'
+
+
 ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
                '__EVENTTARGET', '__EVENTARGUMENT', '__LASTFOCUS']
 # logger = getLogger(__name__)
@@ -28,13 +31,13 @@ ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
 
 def success(resp):
     if 'message' in resp.url:
-        logger.warn(urldecode(resp.url)['message'])
+        logger.warn(urlparse(resp.url)['message'])
         return False
     return True
 
 def asp_post(sess, url, recover_url, params, is_ok=success):
     # Save __EVENTTARGET in case it is overrided
-    et = {'__EVENTTARGET', params.get('__EVENTTARGET')}
+    et = {'__EVENTTARGET': params.get('__EVENTTARGET')}
     asp = asp_params(sess.get(recover_url).text)
     params.update(asp)
     params.update(et)
@@ -42,6 +45,7 @@ def asp_post(sess, url, recover_url, params, is_ok=success):
         try:
             resp = sess.post(url, data=params)
             resp.raise_for_status()
+            set_trace()
             if is_ok(resp):
                 return resp
             logger.info('Posting' + ' failed the ' + str(cnt) + ' times.')
@@ -59,15 +63,19 @@ def asp_params(page):
 
 
 def main_page(sess, query='?xklc=1'):
+    '''
+    This function is useless.
+    '''
     # query = '?xklc=1': 海选
     # query = '?xklc=2': 抢选
     # query = '?xklc=3': 第三轮选
-    return asp_post(sess,
-                    url=ELECT_URL + 'electwarning.aspx' + query,
-                    recover_url=ELECT_URL + 'electwarning.aspx',
-                    params={'CheckBox1': 'on', 'btnContinue': '继续'},
-                    # is_ok=lambda resp: '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' not in resp.url
-                    )
+    return sess.get(ELECT_URL+'sltFromRcommandTbl.aspx')
+    # return asp_post(sess,
+    #                 url=ELECT_URL + 'electwarning.aspx' + query,
+    #                 recover_url=ELECT_URL + 'electwarning.aspx',
+    #                 params={'CheckBox1': 'on', 'btnContinue': '继续'},
+    #                 # is_ok=lambda resp: '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' not in resp.url
+    #                 )
 
 def qiangke(sess, course):
     query = {'kcdm': course.cid,
@@ -83,7 +91,7 @@ def qiangke(sess, course):
             'LessonTime1$btnChoose': '选定此教师'
             }
     url = LESSON_URL+'viewLessonArrange.aspx?'+urlencode(query)
-    return asp_post(sess, url=url, recover_url=url, params=form)
+    return asp_post(sess, url=url, recover_url=url, params=params)
 
 
 class course(object):
@@ -94,7 +102,8 @@ class course(object):
 
 if __name__ == '__main__':
     test_course = course(**{'cid': 'PS900', 'bsid': '456723', 'xyid': 'ba231'})
-    qiangke(requests.Session(), test_course)
+    # qiangke(requests.Session(), test_course)
+    main_page(login('zxdewr', 'pypy11u'))
     # sess = login('zxdewr', 'p1ptess')
     # init(sess)
 
