@@ -10,14 +10,17 @@ from jaccount import login
 from pdb import set_trace
 from logging import getLogger
 from bs4 import BeautifulSoup
+from functools import wraps
 import requests
 
 EDU_URL = 'http://electsys.sjtu.edu.cn/edu/'
 ELECT_URL = EDU_URL+'student/elect/'
-TEST_LESSON_URL = 'http://localhost/ele/website/%E4%BD%93%E8%82%B2%283%29_files/viewLessonArrange.html'
+TEST_LESSON_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE-%E4%BA%BA%E6%96%87-%E7%A7%AF%E6%9E%81%E5%BF%83%E7%90%86%E5%AD%A6_files/viewLessonArrange.html'
+# TEST_LESSON_URL = 'http://localhost/ele/website/%E4%BD%93%E8%82%B2%283%29_files/viewLessonArrange.html'
 TEST_TONGSHI_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE_files/speltyCommonCourse.html'
 TEST_RENWEN_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE-%E4%BA%BA%E6%96%87_files/speltyCommonCourse.html'
 TEST_RENXUAN_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E8%88%B9%E5%BB%BA_files/outSpeltyEP.html'
+TEST_SHUXUE_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E6%95%B0%E5%AD%A6_files/outSpeltyEP.html'
 
 # TODO: Make a pool of cookies and asp_values
 # class AspSession(object):
@@ -67,6 +70,8 @@ class Course(Item):
     credit = Field()
     teacher = Field()
     duration = Field()
+    max_member = Field()
+    min_member = Field()
     week = Field()
     bsid = Field()
     remark = Field()
@@ -94,6 +99,15 @@ class TongShiSpider(Spider):
     #         formdata = {'CheckBox1': 'on', 'btnContinue' : '继续'},
     #         callback = self.after_post
     #     )]
+
+    # def test_wrapper(self):
+    #     def decorator(self, func):
+    #         @wraps(func)
+    #         def wrapper(*args, **kwargs):
+    #             for request in func(*args, **kwargs):
+    #                 yield request
+    #         return wrapper
+    #     return decorator
 
     def tongshi_1(self, response):
         for course_type in ['02', '03', '04', '05']:
@@ -160,7 +174,7 @@ class TongShiSpider(Spider):
             yield loader.load_item()
 
     def renxuan_1(self, response):
-        facaulties = response.xpath('//select[@name="OutSpeltyEP1$dpYx"]/option/@value')
+        facaulties = response.xpath('//select[@name="OutSpeltyEP1$dpYx"]/option')
         for facaulty in facaulties:
             for grade in ['2014', '2015', '2016']:
                 params = {'OutSpeltyEP1$dpYx': facaulty.extract(),
@@ -168,13 +182,18 @@ class TongShiSpider(Spider):
                         'OutSpeltyEP1$btnQuery': '查 询'
                         }
                 loader = CourseItemLoader(Course(), selector=facaulty)
-                loader.add_xpath('course_type', '.')
-                yield FormRequest.from_response(
-                        response, 
-                        formdata = params,
-                        meta = {'item': loader.load_item()}, 
+                loader.add_xpath('course_type', './@value')
+                yield Request(url=TEST_SHUXUE_URL, 
+                        dont_filter=True, 
+                        meta= {'item':loader.load_item()},
                         callback = self.renxuan_2
                 )
+                # yield FormRequest.from_response(
+                #         response, 
+                #         formdata = params,
+                #         meta = {'item': loader.load_item()}, 
+                #         callback = self.renxuan_2
+                # )
 
     def renxuan_2(self, response):
         trs = response.xpath('//table[@id="OutSpeltyEP1_gridMain"]/tbody/tr[re:test(@class,"tdcolour\d$")]')
@@ -184,24 +203,29 @@ class TongShiSpider(Spider):
             loader.add_xpath('name', './td[2]/text()')
             loader.add_xpath('cid', './td[3]/text()')
             loader.add_xpath('credit', './td[6]/text()')
-            yield FormRequest.from_response(
-                    response,
-                    formdata={
-                        'OutSpeltyEP1$dpYx':response.meta['item']['course_type'],
-                        'OutSpeltyEP1$dpNj':response.meta['item']['grade'],
-                        'myradiogroup':cid,
-                        'OutSpeltyEP1$lessonArrange': '课程安排'
-                    },
-                    meta={'item': loader.load_item()},
-                    callback=self.lesson_parser
+            yield Request(url=TEST_LESSON_URL, 
+                    dont_filter=True, 
+                    meta= {'item':loader.load_item()},
+                    callback = self.lesson_parser
             )
+            # yield FormRequest.from_response(
+            #         response,
+            #         formdata={
+            #             'OutSpeltyEP1$dpYx':response.meta['item']['course_type'],
+            #             'OutSpeltyEP1$dpNj':response.meta['item']['grade'],
+            #             'myradiogroup':cid,
+            #             'OutSpeltyEP1$lessonArrange': '课程安排'
+            #         },
+            #         meta={'item': loader.load_item()},
+            #         callback=self.lesson_parser
+            # )
 
     def start_requests(self):
-         yield Request(TEST_TONGSHI_URL,# ELECT_URL+'speltyCommonCourse.aspx',
-            cookies = self.cookies,
-            dont_filter=True, 
-            callback=self.tongshi_1
-        )
+         # yield Request(TEST_TONGSHI_URL,# ELECT_URL+'speltyCommonCourse.aspx',
+         #    cookies = self.cookies,
+         #    dont_filter=True, 
+         #    callback=self.tongshi_1
+        # )
          yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
             cookies = self.cookies,
             dont_filter=True, 
