@@ -4,6 +4,7 @@
 from scrapy import Spider, FormRequest, Request, Item, Field
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import MapCompose
+from scrapy.shell import inspect_response
 from jaccount import login
 # from sdtMain import asp_params
 from pdb import set_trace
@@ -84,14 +85,14 @@ class TongShiSpider(Spider):
     #     params['gridGModule$ctl' + xyid + '$radioButton'] = 'radioButton' # ???
     #     params['__EVENTTARGET'] = 'gridGModule$ctl' + xyid + '$radioButton'
 
-    def parse(self, response):
-        # set_trace()
-        # from scrapy.shell import inspect_response
-        # inspect_response(response, self)
-        return [FormRequest.from_response(response, 
-            formdata = {'CheckBox1': 'on', 'btnContinue' : '继续'},
-            callback = self.after_post
-        )]
+    # def parse(self, response):
+    #     # set_trace()
+    #     # from scrapy.shell import inspect_response
+    #     # inspect_response(response, self)
+    #     return [FormRequest.from_response(response, 
+    #         formdata = {'CheckBox1': 'on', 'btnContinue' : '继续'},
+    #         callback = self.after_post
+    #     )]
 
     def tongshi_1(self, response):
         for course_type in ['02', '03', '04', '05']:
@@ -111,9 +112,10 @@ class TongShiSpider(Spider):
         assert trs
         for tr in trs:
             loader = CourseItemLoader(response.meta['item'], selector=tr)
+            cid = loader.get_xpath('./td[3]/text()')
             loader.add_xpath('name', './td[2]/text()')
             loader.add_xpath('cid', './td[3]/text()')
-            loader.add_xpath('credits', './td[5]/text()')
+            loader.add_xpath('credit', './td[5]/text()')
             yield FormRequest.from_response(
                 response, 
                 formdata={'myradiogroup': str(cid),'lessonArrange': '课程安排'},
@@ -147,33 +149,54 @@ class TongShiSpider(Spider):
             yield loader.load_item()
 
     def renxuan_1(self, response):
-        tag_root = response.xpath('//select[@name="OutSpeltyEP1$dpYx"]/option')
-        for course_type in ['02', '03', '04', '05']:
-            et_str = 'gridGModule$ctl'+course_type+'$radioButton'
-            params = {et_str: 'radioButton', '__EVENTTARGET': et_str}
-            item = Course()
-            item.course_type = course_type
-            yield FormRequest.from_response(
-                    response, 
-                    formdata = params,
-                    meta = {'item': item}, 
-                    callback = self.tongshi_2
-            )
+        facaulties = response.xpath('//select[@name="OutSpeltyEP1$dpYx"]/option/@value')
+        for facaulty in facaulties:
+            for grade in ['2014', '2015', '2016']:
+                params = {'OutSpeltyEP1$dpYx': facaulty.extract(),
+                        'OutSpeltyEP1$dpNj': grade,
+                        'OutSpeltyEP1$btnQuery': '查 询'
+                        }
+                loader = CourseItemLoader(Course(), selector=facaulty)
+                loader.add_xpath('course_type', '.')
+                yield FormRequest.from_response(
+                        response, 
+                        formdata = params,
+                        meta = {'item': loader.load_item()}, 
+                        callback = self.renxuan_2
+                )
 
+    def renxuan_2(self, response):
+        trs = response.xpath('//table[@id="OutSpeltyEP1_gridMain"]/tbody/tr[re:test(@class,"tdcolour\d$")]')
+        for tr in trs:
+            loader = CourseItemLoader(response.meta['item'], selector=tr)
+            cid = loader.get_xpath('./td[3]/text()')
+            loader.add_xpath('name', './td[2]/text()')
+            loader.add_xpath('cid', './td[3]/text()')
+            loader.add_xpath('credit', './td[6]/text()')
+            yield FormRequest.from_response(
+                    response,
+                    formdata={
+                        'OutSpeltyEP1$dpYx':response.meta['item']['course_type'],
+                        'OutSpeltyEP1$dpNj':response.meta['item']['grade'],
+                        'myradiogroup':cid,
+                        'OutSpeltyEP1$lessonArrange': '课程安排'
+                    },
+                    meta={'item': loader.load_item()},
+                    callback=self.lesson_parser
+            )
 
     def start_requests(self):
          yield Request(TEST_TONGSHI_URL,# ELECT_URL+'speltyCommonCourse.aspx',
             cookies = self.cookies,
             dont_filter=True, 
-            callback=self.parse
-        ):
+            callback=self.tongshi_1
+        )
          yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
             cookies = self.cookies,
             dont_filter=True, 
-            callback=self.parse
+            callback=self.renxuan_1
         )
-    def __init__(self, username, password):
-        self.cookies = login('zxdewr', 'sszh2sc')
+
     def __init__(self, username, password):
         self.cookies = login('zxdewr', 'sszh2sc')
 
