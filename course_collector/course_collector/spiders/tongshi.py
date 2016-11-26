@@ -100,14 +100,18 @@ class TongShiSpider(Spider):
             et_str = 'gridGModule$ctl'+course_type+'$radioButton'
             params = {et_str: 'radioButton', '__EVENTTARGET': et_str}
             item = Course()
-            item.course_type = course_type
-            yield FormRequest.from_response(
-                    response, 
-                    url = TEST_RENWEN_URL,# ELECT_URL+'speltyCommonCourse.aspx'
-                    formdata = params,
-                    meta = {'item': item}, 
+            item['course_type'] = course_type
+            yield Request(url=TEST_RENWEN_URL, 
+                    meta= {'item':item},
                     callback = self.tongshi_2
             )
+            # yield FormRequest.from_response(
+            #         response, 
+            #         url = TEST_RENWEN_URL,# ELECT_URL+'speltyCommonCourse.aspx'
+            #         formdata = params,
+            #         meta = {'item': item}, 
+            #         callback = self.tongshi_2
+            # )
 
     def tongshi_2(self, response):
         trs = response.xpath('//table[@id="gridMain"]/tbody/tr[re:test(@class,"tdcolour\d$")]')
@@ -118,13 +122,17 @@ class TongShiSpider(Spider):
             loader.add_xpath('name', './td[2]/text()')
             loader.add_xpath('cid', './td[3]/text()')
             loader.add_xpath('credit', './td[5]/text()')
-            yield FormRequest.from_response(
-                response, 
-                url = TEST_LESSON_URL,# ELECT_URL+'viewLessonArrange.aspx'
-                formdata={'myradiogroup': str(cid),'lessonArrange': '课程安排'},
-                meta={'item': loader.load_item()},
-                callback=self.lesson_parser
+            yield Request(url=TEST_LESSON_URL, 
+                    meta= {'item':loader.load_item()},
+                    callback = self.lesson_parser
             )
+            # yield FormRequest.from_response(
+            #     response, 
+            #     url = TEST_LESSON_URL,# ELECT_URL+'viewLessonArrange.aspx'
+            #     formdata={'myradiogroup': str(cid),'lessonArrange': '课程安排'},
+            #     meta={'item': loader.load_item()},
+            #     callback=self.lesson_parser
+            # )
         # cnames = [s.strip() for s in tr.xpath('./td[2]/text()').extract()]
         # cids = [s.strip() for s in tr.xpath('./td[3]/text()').extract()]
         # ccredits = [s.strip() for s in tr.xpath('./td[5]/text()').extract()]
@@ -143,12 +151,12 @@ class TongShiSpider(Spider):
         for tr in trs:
             loader = CourseItemLoader(response.meta['item'], selector=tr)
             loader.add_xpath('bsid', './/input[@name="myradiogroup"]/@value')
-            loader.add_xpath('teacher', './td[1]/text()')
-            loader.add_xpath('duration', './td[4]/text()')
-            loader.add_xpath('max_member', './td[5]/text()')
-            loader.add_xpath('min_member', './td[6]/text()')
-            loader.add_xpath('week', './td[9]/text()')
-            loader.add_xpath('remark', './td[10]/text()')
+            loader.add_xpath('teacher', './td[2]/text()')
+            loader.add_xpath('duration', './td[5]/text()')
+            loader.add_xpath('max_member', './td[6]/text()')
+            loader.add_xpath('min_member', './td[7]/text()')
+            loader.add_xpath('week', './td[10]/text()')
+            loader.add_xpath('remark', './td[11]/text()')
             yield loader.load_item()
 
     def renxuan_1(self, response):
