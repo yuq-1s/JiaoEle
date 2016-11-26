@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 '''
     Login jaccount and return requests.session object.
@@ -8,13 +8,14 @@
         2. Decode captcha automatically
 '''
 
-import requests
-import shutil
-import sys
+from requests import Session
+from sys import argv, exit
 from pdb import set_trace
 from bs4 import BeautifulSoup
 from PIL import Image
 from io import BytesIO
+from pytesseract import image_to_string
+from logging import getLogger
 
 def tohttps(oriurl):
     prot, body = resp.request.url.split(':')
@@ -30,9 +31,7 @@ def captcha_src(soup):
 def input_captcha(sess, soup):
     r = sess.get('https://jaccount.sjtu.edu.cn/jaccount/'+captcha_src(soup),
             stream=True)
-    img = Image.open(BytesIO(r.content))
-    img.show()
-    return raw_input('What\'s in the image?\n')
+    return image_to_string(Image.open(BytesIO(r.content)))
 
 def post_data(sess, soup, user, secret):
     form = ['sid', 'returl', 'se', 'v']
@@ -44,29 +43,41 @@ def post_data(sess, soup, user, secret):
     return data
 
 def login(user, secret):
-    # Get Session object
-    sess = requests.Session()
+    logger = getLogger(__name__)
+    for try_count in range(10):
+        # Get Session object
+        sess = Session()
 
-    # Store ASP.NetSessionId in sess
-    resp = sess.get('http://electsys.sjtu.edu.cn/edu/login.aspx')
+        # Store ASP.NetSessionId in sess
+        resp = sess.get('http://electsys.sjtu.edu.cn/edu/login.aspx')
 
-    # Prepare for post
-    soup = BeautifulSoup(resp.text, 'html.parser')
-    post_url = 'https://jaccount.sjtu.edu.cn/jaccount/ulogin'
-    
-    # Post username and password and get authorization url
-    auth_resp = sess.post(post_url, data = post_data(sess, soup, user, secret))
-    soup = BeautifulSoup(auth_resp.text, 'html.parser')
-    try:
-        auth_url = soup.find('meta', {'http-equiv':'refresh'})['content'].split('url=')[1]
-    except TypeError:
-        raise AssertionError("Username or password or captcha is wrong.")
+        # Prepare for post
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        post_url = 'https://jaccount.sjtu.edu.cn/jaccount/ulogin'
 
-    # Get authorized
-    sess.get(auth_url)
-    return {s: sess.cookies[s] for s in ['ASP.NET_SessionId', 'mail_test_cookie']}
+        # Post username and password and get authorization url
+        auth_resp = sess.post(post_url, data = post_data(sess, soup, user, secret))
+        soup = BeautifulSoup(auth_resp.text, 'html.parser')
+        try:
+            auth_url = soup.find('meta', {'http-equiv':'refresh'})['content'].split('url=')[1]
 
-    # return sess# , prepare_form(sess)
+            # Get authorized
+            sess.get(auth_url)
+
+            logger.info("Login succeeded!")
+            return sess# , prepare_form(sess)
+        except TypeError:
+            logger.warning("The %d attempt to login failed ..." % try_count)
+    logger.error("Login failed...")
+    print("Are you sure about the username and password?")
+    exit(1)
+
+def prepare_cookie(sess):
+    ele_cookies_list = ['ASP.NET_SessionId', 'mail_test_cookie']
+    return {s: sess.cookies[s] for s in ele_cookies_list}
+
+if __name__ == '__main__':
+    print(prepare_cookie(login(argv[1], argv[2])))
 
 # def check_session(sess):
 #     check_list = ['ASP.NET_SessionId', 'JASiteCookie', 'mail_test_cookie']
@@ -78,40 +89,3 @@ def login(user, secret):
 #     form_url = 'http://electsys.sjtu.edu.cn/edu/newsboard/newsinside.aspx'
 #     form_soup = BeautifulSoup(sess.get(form_url).text, 'html.parser')
 #     return {inp['name']: inp['value'] for inp in form_soup.find_all('input')}
-
-if __name__ == '__main__':
-    print(login(sys.argv[1], sys.argv[2]).cookies)
-# new_soup = BeautifulSoup(resp.text, 'html.parser')
-
-# print(resp.cookies)
-# print(resp.history)
-# print(resp.url)
-
-# print("Posting request...")
-# print(new_resp.history)
-# print(new_resp.history[0].headers)
-# print(new_resp.request.headers)
-# print(new_resp.status_code)
-# print(new_soup.url)
-
-# print(new_resp.request.body)
-# # print(new_resp.request.data)
-# # print(new_resp.data)
-
-# # print(new_soup.prettify())
-# print(new_soup.headers)
-# print(soup.content)
-# print(new_resp.raw)
-
-# if r.status_code == 200:
-#     with open('captcha.jpeg', 'wb') as f:
-#         r.raw.decode_content = True
-#         shutil.copyfileobj(r.raw, f)
-# print(soup.findAll("img")[1]['src'])#.split('"'))
-# print(resp.status_code)
-# print(resp.headers)
-# print(soup.prettify())
-# url2 = tohttps(resp.request.url)
-
-# resp2 = requests.get('http://electsys.sjtu.edu.cn/edu/login.aspx', headers = hd)
-# print(BeautifulSoup(resp2.text, 'html.parser').prettify())

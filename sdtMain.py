@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# -*- coding: utf-8 -*-
 from jaccount import login
 from pdb import set_trace
 from bs4 import BeautifulSoup
@@ -8,6 +9,7 @@ from itertools import count
 from functools import wraps
 from sys import stdout
 from urllib.parse import urlencode, urlparse
+from lxml import etree
 
 # TODO:
 #   1. Try to grab courses directly.(not step by step from main page)
@@ -38,6 +40,7 @@ def success(resp):
 def asp_post(sess, url, recover_url, params, is_ok=success):
     # Save __EVENTTARGET in case it is overrided
     et = {'__EVENTTARGET': params.get('__EVENTTARGET')}
+    set_trace()
     asp = asp_params(sess.get(recover_url).text)
     params.update(asp)
     params.update(et)
@@ -69,13 +72,13 @@ def main_page(sess, query='?xklc=1'):
     # query = '?xklc=1': 海选
     # query = '?xklc=2': 抢选
     # query = '?xklc=3': 第三轮选
-    return sess.get(ELECT_URL+'sltFromRcommandTbl.aspx')
-    # return asp_post(sess,
-    #                 url=ELECT_URL + 'electwarning.aspx' + query,
-    #                 recover_url=ELECT_URL + 'electwarning.aspx',
-    #                 params={'CheckBox1': 'on', 'btnContinue': '继续'},
-    #                 # is_ok=lambda resp: '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' not in resp.url
-    #                 )
+    # return sess.get(ELECT_URL+'sltFromRcommandTbl.aspx')
+    return asp_post(sess,
+                    url=ELECT_URL + 'electwarning.aspx' + query,
+                    recover_url=ELECT_URL + 'electwarning.aspx' + query,
+                    params={'CheckBox1': 'on', 'btnContinue': '继续'},
+                    # is_ok=lambda resp: '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' not in resp.url
+                    )
 
 def qiangke(sess, course):
     query = {'kcdm': course.cid,
