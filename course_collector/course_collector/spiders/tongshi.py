@@ -17,6 +17,7 @@ ELECT_URL = EDU_URL+'student/elect/'
 TEST_LESSON_URL = 'http://localhost/ele/website/%E4%BD%93%E8%82%B2%283%29_files/viewLessonArrange.html'
 TEST_TONGSHI_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE_files/speltyCommonCourse.html'
 TEST_RENWEN_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE-%E4%BA%BA%E6%96%87_files/speltyCommonCourse.html'
+TEST_RENXUAN_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E8%88%B9%E5%BB%BA_files/outSpeltyEP.html'
 
 # TODO: Make a pool of cookies and asp_values
 # class AspSession(object):
@@ -75,7 +76,7 @@ class CourseItemLoader(ItemLoader):
     default_input_processor = MapCompose(str.strip)
 
 class TongShiSpider(Spider):
-    # name = 'tongshi'
+    name = 'tongshi'
     # def prepare_param(self, response, xyid = None):
     #     # ASP_PARA_LIST = ['__VIEWSTATE', '__VIEWSTATEGENERATOR',
     #     # '__EVENTVALIDATION']
@@ -102,6 +103,7 @@ class TongShiSpider(Spider):
             item.course_type = course_type
             yield FormRequest.from_response(
                     response, 
+                    url = TEST_RENWEN_URL,# ELECT_URL+'speltyCommonCourse.aspx'
                     formdata = params,
                     meta = {'item': item}, 
                     callback = self.tongshi_2
@@ -118,6 +120,7 @@ class TongShiSpider(Spider):
             loader.add_xpath('credit', './td[5]/text()')
             yield FormRequest.from_response(
                 response, 
+                url = TEST_LESSON_URL,# ELECT_URL+'viewLessonArrange.aspx'
                 formdata={'myradiogroup': str(cid),'lessonArrange': '课程安排'},
                 meta={'item': loader.load_item()},
                 callback=self.lesson_parser
@@ -198,7 +201,9 @@ class TongShiSpider(Spider):
         )
 
     def __init__(self, username, password):
-        self.cookies = login('zxdewr', 'sszh2sc')
+        sess = login(username, password)
+        ele_cookies_list = ['ASP.NET_SessionId', 'mail_test_cookie']
+        self.cookies =  {s: sess.cookies[s] for s in ele_cookies_list}
 
     def after_post(self, response):
         if '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' in response.url:
