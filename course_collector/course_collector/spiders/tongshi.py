@@ -23,6 +23,7 @@ TEST_RENXUAN_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E8
 TEST_SHUXUE_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E6%95%B0%E5%AD%A6_files/outSpeltyEP.html'
 
 # TODO: Make a pool of cookies and asp_values
+# TODO: Add Exception handling: if '对不起' in resp.url: yield response.request
 # class AspSession(object):
 #     logger = getLogger()
 #     urls = {'tongshi': EDU_URL+'elect/speltyCommonCourse.aspx',
@@ -226,32 +227,44 @@ class TongShiSpider(Spider):
          #    dont_filter=True, 
          #    callback=self.tongshi_1
         # )
-         yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
-            cookies = self.cookies,
-            dont_filter=True, 
-            callback=self.renxuan_1
-        )
+         # yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
+         #    # cookies = self.cookies,
+         #    dont_filter=True, 
+         #    callback=self.renxuan_1
+        # )
+         yield FormRequest(ELECT_URL+'electwarning.aspx?xklc=1',
+                 formdata={'CheckBox1': 'on', 'btnContinue': '继续'},
+                 dont_filter=True,
+                 callback=self.test)
+
+    def test(self, response):
+        inspect_response(response, self)
+        r = FormRequest.from_response(response,
+                 formdata={'CheckBox1': 'on', 'btnContinue': '继续'},
+                 dont_filter=True,
+                 callback=self.test)
+        print(r)
+        yield r
 
     def __init__(self, username, password):
-        sess = login(username, password)
-        ele_cookies_list = ['ASP.NET_SessionId', 'mail_test_cookie']
-        self.cookies =  {s: sess.cookies[s] for s in ele_cookies_list}
+        self.user = username
+        self.passwd = password
 
-    def after_post(self, response):
-        if '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' in response.url:
-            return
-            [Request('file:///home/yuq/Documents/sjtu/electsys/website/通识课_files/speltyCommonCourse.html',
-                callback=self.parse_tongshi)]
+    # def after_post(self, response):
+    #     if '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' in response.url:
+    #         return
+    #         [Request('file:///home/yuq/Documents/sjtu/electsys/website/通识课_files/speltyCommonCourse.html',
+    #             callback=self.parse_tongshi)]
 
-    def parse_tongshi(self, response):
-        courses = response.xpath('//table[@id="gridMain"]/tbody/tr[re:test(@class, "tdcolour\d$")]')
-        from scrapy.shell import inspect_response
-        inspect_response(response, self)
+    # def parse_tongshi(self, response):
+    #     courses = response.xpath('//table[@id="gridMain"]/tbody/tr[re:test(@class, "tdcolour\d$")]')
+    #     from scrapy.shell import inspect_response
+    #     inspect_response(response, self)
 
 
-        # if type(requests) is list:
-        #     for request in requests:
-        #         yield request
-        # else:
-        #     yield requests
+    #     # if type(requests) is list:
+    #     #     for request in requests:
+    #     #         yield request
+    #     # else:
+    #     #     yield requests
 
