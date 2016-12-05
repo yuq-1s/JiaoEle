@@ -22,8 +22,12 @@ TEST_RENWEN_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE-%E4%
 TEST_RENXUAN_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E8%88%B9%E5%BB%BA_files/outSpeltyEP.html'
 TEST_SHUXUE_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E6%95%B0%E5%AD%A6_files/outSpeltyEP.html'
 
+
 # TODO: Make a pool of cookies and asp_values
 # TODO: Add Exception handling: if '对不起' in resp.url: yield response.request
+# TODO: Add Feed Expoter
+# TODO: debug from_response method 
+# TODO: Add exception handler: Frequency limited
 # class AspSession(object):
 #     logger = getLogger()
 #     urls = {'tongshi': EDU_URL+'elect/speltyCommonCourse.aspx',
@@ -232,18 +236,19 @@ class TongShiSpider(Spider):
          #    dont_filter=True, 
          #    callback=self.renxuan_1
         # )
-         yield FormRequest(ELECT_URL+'electwarning.aspx?xklc=1',
-                 formdata={'CheckBox1': 'on', 'btnContinue': '继续'},
+         yield Request(ELECT_URL+'electwarning.aspx?xklc=1',
                  dont_filter=True,
                  callback=self.test)
 
     def test(self, response):
-        inspect_response(response, self)
+        # inspect_response(response, self)
         r = FormRequest.from_response(response,
+                 url= ELECT_URL+'electwarning.aspx?xklc=1',
                  formdata={'CheckBox1': 'on', 'btnContinue': '继续'},
                  dont_filter=True,
                  callback=self.test)
-        print(r)
+        # print(r)
+        # set_trace()
         yield r
 
     def __init__(self, username, password):

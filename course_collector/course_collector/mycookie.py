@@ -1,13 +1,16 @@
 from pdb import set_trace
 from scrapy.http import Request
 from scrapy.item import BaseItem
+from scrapy.shell import inspect_response
 from scrapy.exceptions import NotConfigured
 from scrapy import signals
 from jaccount import login
 from time import time
+from copy import deepcopy
 import queue
 import logging
 
+# TODO: schedule post requests until get page without message in url
 # TODO: MAX_COOKIE_NUMBER
 class MyCookieMiddleware(object):
     # PARAM_URLS = {'tongshi': EDU_URL+'elect/speltyCommonCourse.aspx',
@@ -17,13 +20,12 @@ class MyCookieMiddleware(object):
     # ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
     #         '__EVENTARGUMENT', '__LASTFOCUS']
     MIN_DELTA = 2
-    MAX_COOKIE = 10
     logger = logging.getLogger(__name__)
 
     class TimedCookie(object):
         def __init__(self, cookie):
             self.cookie = cookie
-            self.last_used = ctime()
+            self.last_used = time()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -39,42 +41,50 @@ class MyCookieMiddleware(object):
     def __init__(self, user, password):
         self.user = user
         self.passwd = password
-        self.queue = queue.Queue()
-        self.queue.put(TimedCookie(self._new_cookie()))
-        logger.debug('CookieQueue middleware start')
+        self.cookie_queue = queue.Queue()
+        self.cookie_queue.put(self.TimedCookie(self._new_cookie()))
+        self.logger.debug('CookieQueue middleware start')
 
     # HACK: login() should be intended to get more cookies at a time.
     def _new_cookie(self):
         wanted = ['ASP.NET_SessionId', 'mail_test_cookie']
-        return {s: login(self.user, self.passwd).cookies[s] for s in wanted}
+        return {'ASP.NET_SessionId': 'laxxrayahzgsow45idrlnl2i',
+                'mail_test_cookie': 'IHIBHIAK'}
+        # return {s: login(self.user, self.passwd).cookies[s] for s in wanted}
 
     def _get(self):
         while True:
             try:
-                timed_cookie = self.queue.get()
-                if timed_cookie.last_used - time() >= MIN_DELTA:
+                timed_cookie = self.cookie_queue.get()
+                # set_trace()
+                if time() - timed_cookie.last_used >= self.MIN_DELTA:
                     return timed_cookie.cookie
                 else:
-                    self.queue.put(timed_cookie)
-                    if len(self.queue) <= MAX_COOKIE:
-                        logger.debug('Fetching new cookie...')
-                        return self._new_cookie()
-            except queue.Empty:
-                if len(self.queue) <= MAX_COOKIE:
-                    logger.debug('Fetching new cookie...')
-                    return self._new_cookie()
+                    self.cookie_queue.put(timed_cookie)
+                    # if not self.cookie_queue.full():
+                    #     self.logger.debug('Fetching new cookie...')
+                    #     return self._new_cookie()
+            except cookie_queue.Empty:
+                self.logger.debug('Fetching new cookie...')
+                return self._new_cookie()
 
     def _put(self, cookie):
-        self.queue.put(TimedCookie(cookie))
+        self.cookie_queue.put(self.TimedCookie(cookie))
 
     def process_spider_output(self, response, result, spider):
+        # inspect_response(response, spider)
+        if 'message' in response.url:
+            self.logger.debug('Getting message url')
+            set_trace()
+            return (response.request,)
+
         for r in result:
             # TODO: Take care of GET requests
             if isinstance(r, Request):
-                logger.debug('Processing request %s...' % r)
+                self.logger.debug('Processing request %s...' % r)
                 cookie = self._get()
                 self._put(cookie)
-                assert 'ASP.NET_SessionId' in str(r.replace(cookies = cookie))
+                assert 'ASP.NET_SessionId' in r.replace(cookies=cookie).cookies
                 yield r.replace(cookies = cookie)
             else:
                 yield r
@@ -99,7 +109,7 @@ class MyCookieMiddleware(object):
 
 #     # TODO: Update a specific page's asp_param
 #     def update_params(self):
-#         logger.info('updating asp params...')
+#         self.logger.info('updating asp params...')
 #         self.params = self._get_params(_sess)
 
 
