@@ -2,7 +2,7 @@ import logging
 from six.moves.urllib.parse import urljoin
 from scrapy.shell import inspect_response
 from pdb import set_trace
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 from scrapy.downloadermiddlewares.redirect import RedirectMiddleware
 
 from w3lib.url import safe_url_string
@@ -14,14 +14,24 @@ from scrapy.exceptions import IgnoreRequest, NotConfigured
 logger = logging.getLogger(__name__)
 
 class MyRedirectMiddleware(RedirectMiddleware):
+    ''' This middleware is used to recover original post request when redirected
+        to either the message page or the outTimePage.aspx.
+    '''
+
     def _recover_post(self, request):
         try:
             return request.replace(url=request.meta['redirect_urls'][0],
                     body=request.meta['post_body'],
                     method='POST'
             )
+        # These exceptions should not happen in my project.
+        # Switch the logger level 'error' to 'debug' when you use it.
         except IndexError:
+            logger.error("Request has no redirection record.")
             raise IgnoreRequest("Request has no redirection record.")
+        except KeyError:
+            logger.error("No form data recorded")
+            raise IgnoreRequest("No form data recorded")
 
     def process_response(self, request, response, spider):
         # TODO: Delete the outdated cookie
@@ -29,8 +39,13 @@ class MyRedirectMiddleware(RedirectMiddleware):
             logger.debug('Cookie %s is out of date.' % request.cookies)
             return self._recover_post(request)
 
+        if 'message=' in request.url:
+            logger.debug(unquote(request.url).split('message=')[1])
+            return self._recover_post(request)
+
         ret = RedirectMiddleware.process_response(self, request, response, spider)
 
+        # Record data to be posted
         if response.status == 302 and isinstance(request, FormRequest):
             ret.meta['post_body'] = request.body
 
