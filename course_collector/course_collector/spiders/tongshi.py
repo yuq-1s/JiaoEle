@@ -11,6 +11,7 @@ from pdb import set_trace
 from logging import getLogger
 from bs4 import BeautifulSoup
 from functools import wraps
+import queue
 import requests
 
 EDU_URL = 'http://electsys.sjtu.edu.cn/edu/'
@@ -254,6 +255,7 @@ class TongShiSpider(Spider):
     def __init__(self, username, password):
         self.user = username
         self.passwd = password
+        # self.cqueue = [queue.Queue()]
 
     # def after_post(self, response):
     #     if '%e5%af%b9%e4%b8%8d%e8%b5%b7%2c' in response.url:
