@@ -1,0 +1,2109 @@
+yuq@yidget:~/ele/course_collector$ scrapy crawl tongshi -a username=zxdewr -a password=s1l3nce
+2016-12-06 22:19:49 [scrapy] INFO: Scrapy 1.2.1 started (bot: course_collector)
+2016-12-06 22:19:49 [scrapy] INFO: Overridden settings: {'SPIDER_MODULES': ['course_collector.spiders'], 'NEWSPIDER_MODULE': 'course_collector.spiders', 'BOT_NAME': 'course_collector'}
+2016-12-06 22:19:49 [scrapy] INFO: Enabled extensions:
+['scrapy.extensions.logstats.LogStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.corestats.CoreStats']
+2016-12-06 22:19:49 [py.warnings] WARNING: /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py:30: SyntaxWarning: name 'cookie_count' is used prior to global declaration
+  global cookie_count
+
+2016-12-06 22:19:50 [course_collector.mycookie] DEBUG: 0
+2016-12-06 22:19:50 [course_collector.mycookie] DEBUG: id: 0
+2016-12-06 22:19:50 [course_collector.mycookie] DEBUG: usage_count: 0
+2016-12-06 22:19:50 [course_collector.mycookie] DEBUG: CookieQueue middleware start
+2016-12-06 22:19:50 [scrapy] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'course_collector.myredirect.MyRedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.chunked.ChunkedTransferMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats',
+ 'course_collector.mycookie.MyCookieMiddleware']
+2016-12-06 22:19:50 [scrapy] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2016-12-06 22:19:50 [scrapy] INFO: Enabled item pipelines:
+['course_collector.pipelines.CourseCollectorPipeline']
+2016-12-06 22:19:50 [scrapy] INFO: Spider opened
+2016-12-06 22:19:50 [scrapy] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2016-12-06 22:19:50 [scrapy] DEBUG: Telnet console listening on 127.0.0.1:6023
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(155)process_response()
+-> if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
+(Pdb) r
+2016-12-06 22:19:52 [course_collector.mycookie] DEBUG: 1
+2016-12-06 22:19:52 [course_collector.mycookie] DEBUG: id: 1
+2016-12-06 22:19:52 [course_collector.mycookie] DEBUG: usage_count: 0
+--Return--
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(162)process_response()-><200 http://e...g.aspx?xklc=1>
+-> return response
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/scrapy/core/downloader/middleware.py(53)process_response()-><200 http://e...g.aspx?xklc=1>
+-> spider=spider)
+(Pdb) l
+ 48  	            if isinstance(response, Request):
+ 49  	                defer.returnValue(response)
+ 50  	
+ 51  	            for method in self.methods['process_response']:
+ 52  	                response = yield method(request=request, response=response,
+ 53  ->	                                        spider=spider)
+ 54  	                assert isinstance(response, (Response, Request)), \
+ 55  	                    'Middleware %s.process_response must return Response or Request, got %s' % \
+ 56  	                    (six.get_method_self(method).__class__.__name__, type(response))
+ 57  	                if isinstance(response, Request):
+ 58  	                    defer.returnValue(response)
+(Pdb) ll
+ 45  	        @defer.inlineCallbacks
+ 46  	        def process_response(response):
+ 47  	            assert response is not None, 'Received None in process_response'
+ 48  	            if isinstance(response, Request):
+ 49  	                defer.returnValue(response)
+ 50  	
+ 51  	            for method in self.methods['process_response']:
+ 52  	                response = yield method(request=request, response=response,
+ 53  ->	                                        spider=spider)
+ 54  	                assert isinstance(response, (Response, Request)), \
+ 55  	                    'Middleware %s.process_response must return Response or Request, got %s' % \
+ 56  	                    (six.get_method_self(method).__class__.__name__, type(response))
+ 57  	                if isinstance(response, Request):
+ 58  	                    defer.returnValue(response)
+ 59  	            defer.returnValue(response)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) l
+1249 	
+1250 	    waiting = [True, # waiting for result?
+1251 	               None] # result
+1252 	
+1253 	    while 1:
+1254 ->	        try:
+1255 	            # Send the last result back as the result of the yield expression.
+1256 	            isFailure = isinstance(result, failure.Failure)
+1257 	            if isFailure:
+1258 	                result = result.throwExceptionIntoGenerator(g)
+1259 	            else:
+(Pdb) ll
+1241 	def _inlineCallbacks(result, g, deferred):
+1242 	    """
+1243 	    See L{inlineCallbacks}.
+1244 	    """
+1245 	    # This function is complicated by the need to prevent unbounded recursion
+1246 	    # arising from repeatedly yielding immediately ready deferreds.  This while
+1247 	    # loop and the waiting variable solve that by manually unfolding the
+1248 	    # recursion.
+1249 	
+1250 	    waiting = [True, # waiting for result?
+1251 	               None] # result
+1252 	
+1253 	    while 1:
+1254 ->	        try:
+1255 	            # Send the last result back as the result of the yield expression.
+1256 	            isFailure = isinstance(result, failure.Failure)
+1257 	            if isFailure:
+1258 	                result = result.throwExceptionIntoGenerator(g)
+1259 	            else:
+1260 	                result = g.send(result)
+1261 	        except StopIteration as e:
+1262 	            # fell off the end, or "return" statement
+1263 	            deferred.callback(getattr(e, "value", None))
+1264 	            return deferred
+1265 	        except _DefGen_Return as e:
+1266 	            # returnValue() was called; time to give a result to the original
+1267 	            # Deferred.  First though, let's try to identify the potentially
+1268 	            # confusing situation which results when returnValue() is
+1269 	            # accidentally invoked from a different function, one that wasn't
+1270 	            # decorated with @inlineCallbacks.
+1271 	
+1272 	            # The traceback starts in this frame (the one for
+1273 	            # _inlineCallbacks); the next one down should be the application
+1274 	            # code.
+1275 	            appCodeTrace = exc_info()[2].tb_next
+1276 	            if isFailure:
+1277 	                # If we invoked this generator frame by throwing an exception
+1278 	                # into it, then throwExceptionIntoGenerator will consume an
+1279 	                # additional stack frame itself, so we need to skip that too.
+1280 	                appCodeTrace = appCodeTrace.tb_next
+1281 	            # Now that we've identified the frame being exited by the
+1282 	            # exception, let's figure out if returnValue was called from it
+1283 	            # directly.  returnValue itself consumes a stack frame, so the
+1284 	            # application code will have a tb_next, but it will *not* have a
+1285 	            # second tb_next.
+1286 	            if appCodeTrace.tb_next.tb_next:
+1287 	                # If returnValue was invoked non-local to the frame which it is
+1288 	                # exiting, identify the frame that ultimately invoked
+1289 	                # returnValue so that we can warn the user, as this behavior is
+1290 	                # confusing.
+1291 	                ultimateTrace = appCodeTrace
+1292 	                while ultimateTrace.tb_next.tb_next:
+1293 	                    ultimateTrace = ultimateTrace.tb_next
+1294 	                filename = ultimateTrace.tb_frame.f_code.co_filename
+1295 	                lineno = ultimateTrace.tb_lineno
+1296 	                warnings.warn_explicit(
+1297 	                    "returnValue() in %r causing %r to exit: "
+1298 	                    "returnValue should only be invoked by functions decorated "
+1299 	                    "with inlineCallbacks" % (
+1300 	                        ultimateTrace.tb_frame.f_code.co_name,
+1301 	                        appCodeTrace.tb_frame.f_code.co_name),
+1302 	                    DeprecationWarning, filename, lineno)
+1303 	            deferred.callback(e.value)
+1304 	            return deferred
+1305 	        except:
+1306 	            deferred.errback()
+1307 	            return deferred
+1308 	
+1309 	        if isinstance(result, Deferred):
+1310 	            # a deferred was yielded, get the result.
+1311 	            def gotResult(r):
+1312 	                if waiting[0]:
+1313 	                    waiting[0] = False
+1314 	                    waiting[1] = r
+1315 	                else:
+1316 	                    _inlineCallbacks(r, g, deferred)
+1317 	
+1318 	            result.addBoth(gotResult)
+1319 	            if waiting[0]:
+1320 	                # Haven't called back yet, set flag so that we get reinvoked
+1321 	                # and return from the loop
+1322 	                waiting[0] = False
+1323 	                return deferred
+1324 	
+1325 	            result = waiting[1]
+1326 	            # Reset waiting to initial values for next loop.  gotResult uses
+1327 	            # waiting, but this isn't a problem because gotResult is only
+1328 	            # executed once, and if it hasn't been executed yet, the return
+1329 	            # branch above would have been taken.
+1330 	
+1331 	
+1332 	            waiting[0] = True
+1333 	            waiting[1] = None
+1334 	
+1335 	
+1336 	    return deferred
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) l
+1255 	            # Send the last result back as the result of the yield expression.
+1256 	            isFailure = isinstance(result, failure.Failure)
+1257 	            if isFailure:
+1258 	                result = result.throwExceptionIntoGenerator(g)
+1259 	            else:
+1260 ->	                result = g.send(result)
+1261 	        except StopIteration as e:
+1262 	            # fell off the end, or "return" statement
+1263 	            deferred.callback(getattr(e, "value", None))
+1264 	            return deferred
+1265 	        except _DefGen_Return as e:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) c
+2016-12-06 22:42:59 [scrapy] DEBUG: Crawled (200) <GET http://electsys.sjtu.edu.cn/edu/student/elect/electwarning.aspx?xklc=1> (referer: None)
+2016-12-06 22:42:59 [scrapy] INFO: Crawled 1 pages (at 1 pages/min), scraped 0 items (at 0 items/min)
+2016-12-06 22:42:59 [course_collector.mycookie] DEBUG: {'usage_count': 0, 'id': 1, 'mail_test_cookie': 'IHIBHIAK', 'ASP.NET_SessionId': 't1j5y145vwu44gfdgvmft445'}
+2016-12-06 22:42:59 [course_collector.mycookie] DEBUG: ID: 1
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(155)process_response()
+-> if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
+(Pdb) n
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(156)process_response()
+-> self._put(request.cookies)
+(Pdb) n
+2016-12-06 22:43:07 [course_collector.mycookie] DEBUG: id: 1
+2016-12-06 22:43:07 [course_collector.mycookie] DEBUG: usage_count: 1
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(162)process_response()
+-> return response
+(Pdb) r
+--Return--
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(162)process_response()-><302 http://e...g.aspx?xklc=1>
+-> return response
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/scrapy/core/downloader/middleware.py(53)process_response()-><302 http://e...g.aspx?xklc=1>
+-> spider=spider)
+(Pdb) l
+ 48  	            if isinstance(response, Request):
+ 49  	                defer.returnValue(response)
+ 50  	
+ 51  	            for method in self.methods['process_response']:
+ 52  	                response = yield method(request=request, response=response,
+ 53  ->	                                        spider=spider)
+ 54  	                assert isinstance(response, (Response, Request)), \
+ 55  	                    'Middleware %s.process_response must return Response or Request, got %s' % \
+ 56  	                    (six.get_method_self(method).__class__.__name__, type(response))
+ 57  	                if isinstance(response, Request):
+ 58  	                    defer.returnValue(response)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) ll
+1241 	def _inlineCallbacks(result, g, deferred):
+1242 	    """
+1243 	    See L{inlineCallbacks}.
+1244 	    """
+1245 	    # This function is complicated by the need to prevent unbounded recursion
+1246 	    # arising from repeatedly yielding immediately ready deferreds.  This while
+1247 	    # loop and the waiting variable solve that by manually unfolding the
+1248 	    # recursion.
+1249 	
+1250 	    waiting = [True, # waiting for result?
+1251 	               None] # result
+1252 	
+1253 	    while 1:
+1254 	        try:
+1255 	            # Send the last result back as the result of the yield expression.
+1256 	            isFailure = isinstance(result, failure.Failure)
+1257 	            if isFailure:
+1258 	                result = result.throwExceptionIntoGenerator(g)
+1259 	            else:
+1260 	                result = g.send(result)
+1261 	        except StopIteration as e:
+1262 	            # fell off the end, or "return" statement
+1263 	            deferred.callback(getattr(e, "value", None))
+1264 	            return deferred
+1265 	        except _DefGen_Return as e:
+1266 	            # returnValue() was called; time to give a result to the original
+1267 	            # Deferred.  First though, let's try to identify the potentially
+1268 	            # confusing situation which results when returnValue() is
+1269 	            # accidentally invoked from a different function, one that wasn't
+1270 	            # decorated with @inlineCallbacks.
+1271 	
+1272 	            # The traceback starts in this frame (the one for
+1273 	            # _inlineCallbacks); the next one down should be the application
+1274 	            # code.
+1275 	            appCodeTrace = exc_info()[2].tb_next
+1276 	            if isFailure:
+1277 	                # If we invoked this generator frame by throwing an exception
+1278 	                # into it, then throwExceptionIntoGenerator will consume an
+1279 	                # additional stack frame itself, so we need to skip that too.
+1280 	                appCodeTrace = appCodeTrace.tb_next
+1281 	            # Now that we've identified the frame being exited by the
+1282 	            # exception, let's figure out if returnValue was called from it
+1283 	            # directly.  returnValue itself consumes a stack frame, so the
+1284 	            # application code will have a tb_next, but it will *not* have a
+1285 	            # second tb_next.
+1286 	            if appCodeTrace.tb_next.tb_next:
+1287 	                # If returnValue was invoked non-local to the frame which it is
+1288 	                # exiting, identify the frame that ultimately invoked
+1289 	                # returnValue so that we can warn the user, as this behavior is
+1290 	                # confusing.
+1291 	                ultimateTrace = appCodeTrace
+1292 	                while ultimateTrace.tb_next.tb_next:
+1293 	                    ultimateTrace = ultimateTrace.tb_next
+1294 	                filename = ultimateTrace.tb_frame.f_code.co_filename
+1295 	                lineno = ultimateTrace.tb_lineno
+1296 	                warnings.warn_explicit(
+1297 	                    "returnValue() in %r causing %r to exit: "
+1298 	                    "returnValue should only be invoked by functions decorated "
+1299 	                    "with inlineCallbacks" % (
+1300 	                        ultimateTrace.tb_frame.f_code.co_name,
+1301 	                        appCodeTrace.tb_frame.f_code.co_name),
+1302 	                    DeprecationWarning, filename, lineno)
+1303 	            deferred.callback(e.value)
+1304 	            return deferred
+1305 	        except:
+1306 	            deferred.errback()
+1307 	            return deferred
+1308 	
+1309 ->	        if isinstance(result, Deferred):
+1310 	            # a deferred was yielded, get the result.
+1311 	            def gotResult(r):
+1312 	                if waiting[0]:
+1313 	                    waiting[0] = False
+1314 	                    waiting[1] = r
+1315 	                else:
+1316 	                    _inlineCallbacks(r, g, deferred)
+1317 	
+1318 	            result.addBoth(gotResult)
+1319 	            if waiting[0]:
+1320 	                # Haven't called back yet, set flag so that we get reinvoked
+1321 	                # and return from the loop
+1322 	                waiting[0] = False
+1323 	                return deferred
+1324 	
+1325 	            result = waiting[1]
+1326 	            # Reset waiting to initial values for next loop.  gotResult uses
+1327 	            # waiting, but this isn't a problem because gotResult is only
+1328 	            # executed once, and if it hasn't been executed yet, the return
+1329 	            # branch above would have been taken.
+1330 	
+1331 	
+1332 	            waiting[0] = True
+1333 	            waiting[1] = None
+1334 	
+1335 	
+1336 	    return deferred
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+2016-12-06 22:43:58 [scrapy] DEBUG: Redirecting (302) to <GET http://electsys.sjtu.edu.cn/edu/student/elect/electcheck.aspx?xklc=1> from <POST http://electsys.sjtu.edu.cn/edu/student/elect/electwarning.aspx?xklc=1>
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+twisted.internet.defer._DefGen_Return: <GET http://electsys.sjtu.edu.cn/edu/student/elect/electcheck.aspx?xklc=1>
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1261)_inlineCallbacks()
+-> except StopIteration as e:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1265)_inlineCallbacks()
+-> except _DefGen_Return as e:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1275)_inlineCallbacks()
+-> appCodeTrace = exc_info()[2].tb_next
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1276)_inlineCallbacks()
+-> if isFailure:
+(Pdb) ll
+1241 	def _inlineCallbacks(result, g, deferred):
+1242 	    """
+1243 	    See L{inlineCallbacks}.
+1244 	    """
+1245 	    # This function is complicated by the need to prevent unbounded recursion
+1246 	    # arising from repeatedly yielding immediately ready deferreds.  This while
+1247 	    # loop and the waiting variable solve that by manually unfolding the
+1248 	    # recursion.
+1249 	
+1250 	    waiting = [True, # waiting for result?
+1251 	               None] # result
+1252 	
+1253 	    while 1:
+1254 	        try:
+1255 	            # Send the last result back as the result of the yield expression.
+1256 	            isFailure = isinstance(result, failure.Failure)
+1257 	            if isFailure:
+1258 	                result = result.throwExceptionIntoGenerator(g)
+1259 	            else:
+1260 	                result = g.send(result)
+1261 	        except StopIteration as e:
+1262 	            # fell off the end, or "return" statement
+1263 	            deferred.callback(getattr(e, "value", None))
+1264 	            return deferred
+1265 	        except _DefGen_Return as e:
+1266 	            # returnValue() was called; time to give a result to the original
+1267 	            # Deferred.  First though, let's try to identify the potentially
+1268 	            # confusing situation which results when returnValue() is
+1269 	            # accidentally invoked from a different function, one that wasn't
+1270 	            # decorated with @inlineCallbacks.
+1271 	
+1272 	            # The traceback starts in this frame (the one for
+1273 	            # _inlineCallbacks); the next one down should be the application
+1274 	            # code.
+1275 	            appCodeTrace = exc_info()[2].tb_next
+1276 ->	            if isFailure:
+1277 	                # If we invoked this generator frame by throwing an exception
+1278 	                # into it, then throwExceptionIntoGenerator will consume an
+1279 	                # additional stack frame itself, so we need to skip that too.
+1280 	                appCodeTrace = appCodeTrace.tb_next
+1281 	            # Now that we've identified the frame being exited by the
+1282 	            # exception, let's figure out if returnValue was called from it
+1283 	            # directly.  returnValue itself consumes a stack frame, so the
+1284 	            # application code will have a tb_next, but it will *not* have a
+1285 	            # second tb_next.
+1286 	            if appCodeTrace.tb_next.tb_next:
+1287 	                # If returnValue was invoked non-local to the frame which it is
+1288 	                # exiting, identify the frame that ultimately invoked
+1289 	                # returnValue so that we can warn the user, as this behavior is
+1290 	                # confusing.
+1291 	                ultimateTrace = appCodeTrace
+1292 	                while ultimateTrace.tb_next.tb_next:
+1293 	                    ultimateTrace = ultimateTrace.tb_next
+1294 	                filename = ultimateTrace.tb_frame.f_code.co_filename
+1295 	                lineno = ultimateTrace.tb_lineno
+1296 	                warnings.warn_explicit(
+1297 	                    "returnValue() in %r causing %r to exit: "
+1298 	                    "returnValue should only be invoked by functions decorated "
+1299 	                    "with inlineCallbacks" % (
+1300 	                        ultimateTrace.tb_frame.f_code.co_name,
+1301 	                        appCodeTrace.tb_frame.f_code.co_name),
+1302 	                    DeprecationWarning, filename, lineno)
+1303 	            deferred.callback(e.value)
+1304 	            return deferred
+1305 	        except:
+1306 	            deferred.errback()
+1307 	            return deferred
+1308 	
+1309 	        if isinstance(result, Deferred):
+1310 	            # a deferred was yielded, get the result.
+1311 	            def gotResult(r):
+1312 	                if waiting[0]:
+1313 	                    waiting[0] = False
+1314 	                    waiting[1] = r
+1315 	                else:
+1316 	                    _inlineCallbacks(r, g, deferred)
+1317 	
+1318 	            result.addBoth(gotResult)
+1319 	            if waiting[0]:
+1320 	                # Haven't called back yet, set flag so that we get reinvoked
+1321 	                # and return from the loop
+1322 	                waiting[0] = False
+1323 	                return deferred
+1324 	
+1325 	            result = waiting[1]
+1326 	            # Reset waiting to initial values for next loop.  gotResult uses
+1327 	            # waiting, but this isn't a problem because gotResult is only
+1328 	            # executed once, and if it hasn't been executed yet, the return
+1329 	            # branch above would have been taken.
+1330 	
+1331 	
+1332 	            waiting[0] = True
+1333 	            waiting[1] = None
+1334 	
+1335 	
+1336 	    return deferred
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1286)_inlineCallbacks()
+-> if appCodeTrace.tb_next.tb_next:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1303)_inlineCallbacks()
+-> deferred.callback(e.value)
+(Pdb) e
+_DefGen_Return(<GET http://electsys.sjtu.edu.cn/edu/student/elect/electcheck.aspx?xklc=1>,)
+(Pdb) type(e)
+<class 'twisted.internet.defer._DefGen_Return'>
+(Pdb) dir(e)
+['__cause__', '__class__', '__context__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setstate__', '__sizeof__', '__str__', '__subclasshook__', '__suppress_context__', '__traceback__', '__weakref__', 'args', 'value', 'with_traceback']
+(Pdb) e.valur
+*** AttributeError: '_DefGen_Return' object has no attribute 'valur'
+(Pdb) e.value
+<GET http://electsys.sjtu.edu.cn/edu/student/elect/electcheck.aspx?xklc=1>
+(Pdb) type(e.value)
+<class 'scrapy.http.request.form.FormRequest'>
+(Pdb) dir(e.value)
+['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__slots__', '__str__', '__subclasshook__', '__weakref__', '_body', '_encoding', '_get_body', '_get_url', '_meta', '_set_body', '_set_url', '_url', 'body', 'callback', 'cookies', 'copy', 'dont_filter', 'encoding', 'errback', 'from_response', 'headers', 'meta', 'method', 'priority', 'replace', 'url']
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()
+-> return deferred
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()-><Deferred at ....aspx?xklc=1>>
+-> return deferred
+(Pdb) l
+1299 	                    "with inlineCallbacks" % (
+1300 	                        ultimateTrace.tb_frame.f_code.co_name,
+1301 	                        appCodeTrace.tb_frame.f_code.co_name),
+1302 	                    DeprecationWarning, filename, lineno)
+1303 	            deferred.callback(e.value)
+1304 ->	            return deferred
+1305 	        except:
+1306 	            deferred.errback()
+1307 	            return deferred
+1308 	
+1309 	        if isinstance(result, Deferred):
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1406)unwindGenerator()-><Deferred at ....aspx?xklc=1>>
+-> return _inlineCallbacks(None, gen, Deferred())
+(Pdb) l
+1401 	                "caught returnValue being used in a non-generator" % (f,))
+1402 	        if not isinstance(gen, types.GeneratorType):
+1403 	            raise TypeError(
+1404 	                "inlineCallbacks requires %r to produce a generator; "
+1405 	                "instead got %r" % (f, gen))
+1406 ->	        return _inlineCallbacks(None, gen, Deferred())
+1407 	    return unwindGenerator
+1408 	
+1409 	
+1410 	## DeferredLock/DeferredQueue
+1411 	
+(Pdb) ll
+1394 	    @wraps(f)
+1395 	    def unwindGenerator(*args, **kwargs):
+1396 	        try:
+1397 	            gen = f(*args, **kwargs)
+1398 	        except _DefGen_Return:
+1399 	            raise TypeError(
+1400 	                "inlineCallbacks requires %r to produce a generator; instead"
+1401 	                "caught returnValue being used in a non-generator" % (f,))
+1402 	        if not isinstance(gen, types.GeneratorType):
+1403 	            raise TypeError(
+1404 	                "inlineCallbacks requires %r to produce a generator; "
+1405 	                "instead got %r" % (f, gen))
+1406 ->	        return _inlineCallbacks(None, gen, Deferred())
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) ll
+574  	    def _runCallbacks(self):
+575  	        """
+576  	        Run the chain of callbacks once a result is available.
+577  	
+578  	        This consists of a simple loop over all of the callbacks, calling each
+579  	        with the current result and making the current result equal to the
+580  	        return value (or raised exception) of that call.
+581  	
+582  	        If L{_runningCallbacks} is true, this loop won't run at all, since
+583  	        it is already running above us on the call stack.  If C{self.paused} is
+584  	        true, the loop also won't run, because that's what it means to be
+585  	        paused.
+586  	
+587  	        The loop will terminate before processing all of the callbacks if a
+588  	        L{Deferred} without a result is encountered.
+589  	
+590  	        If a L{Deferred} I{with} a result is encountered, that result is taken
+591  	        and the loop proceeds.
+592  	
+593  	        @note: The implementation is complicated slightly by the fact that
+594  	            chaining (associating two L{Deferred}s with each other such that one
+595  	            will wait for the result of the other, as happens when a Deferred is
+596  	            returned from a callback on another L{Deferred}) is supported
+597  	            iteratively rather than recursively, to avoid running out of stack
+598  	            frames when processing long chains.
+599  	        """
+600  	        if self._runningCallbacks:
+601  	            # Don't recursively run callbacks
+602  	            return
+603  	
+604  	        # Keep track of all the Deferreds encountered while propagating results
+605  	        # up a chain.  The way a Deferred gets onto this stack is by having
+606  	        # added its _continuation() to the callbacks list of a second Deferred
+607  	        # and then that second Deferred being fired.  ie, if ever had _chainedTo
+608  	        # set to something other than None, you might end up on this stack.
+609  	        chain = [self]
+610  	
+611  	        while chain:
+612  	            current = chain[-1]
+613  	
+614  	            if current.paused:
+615  	                # This Deferred isn't going to produce a result at all.  All the
+616  	                # Deferreds up the chain waiting on it will just have to...
+617  	                # wait.
+618  	                return
+619  	
+620  	            finished = True
+621  	            current._chainedTo = None
+622  	            while current.callbacks:
+623  	                item = current.callbacks.pop(0)
+624  	                callback, args, kw = item[
+625  	                    isinstance(current.result, failure.Failure)]
+626  	                args = args or ()
+627  	                kw = kw or {}
+628  	
+629  	                # Avoid recursion if we can.
+630  	                if callback is _CONTINUE:
+631  	                    # Give the waiting Deferred our current result and then
+632  	                    # forget about that result ourselves.
+633  	                    chainee = args[0]
+634  	                    chainee.result = current.result
+635  	                    current.result = None
+636  	                    # Making sure to update _debugInfo
+637  	                    if current._debugInfo is not None:
+638  	                        current._debugInfo.failResult = None
+639  	                    chainee.paused -= 1
+640  	                    chain.append(chainee)
+641  	                    # Delay cleaning this Deferred and popping it from the chain
+642  	                    # until after we've dealt with chainee.
+643  	                    finished = False
+644  	                    break
+645  	
+646  	                try:
+647  	                    current._runningCallbacks = True
+648  	                    try:
+649  	                        current.result = callback(current.result, *args, **kw)
+650  ->	                        if current.result is current:
+651  	                            warnAboutFunction(
+652  	                                callback,
+653  	                                "Callback returned the Deferred "
+654  	                                "it was attached to; this breaks the "
+655  	                                "callback chain and will raise an "
+656  	                                "exception in the future.")
+657  	                    finally:
+658  	                        current._runningCallbacks = False
+659  	                except:
+660  	                    # Including full frame information in the Failure is quite
+661  	                    # expensive, so we avoid it unless self.debug is set.
+662  	                    current.result = failure.Failure(captureVars=self.debug)
+663  	                else:
+664  	                    if isinstance(current.result, Deferred):
+665  	                        # The result is another Deferred.  If it has a result,
+666  	                        # we can take it and keep going.
+667  	                        resultResult = getattr(current.result, 'result', _NO_RESULT)
+668  	                        if resultResult is _NO_RESULT or isinstance(resultResult, Deferred) or current.result.paused:
+669  	                            # Nope, it didn't.  Pause and chain.
+670  	                            current.pause()
+671  	                            current._chainedTo = current.result
+672  	                            # Note: current.result has no result, so it's not
+673  	                            # running its callbacks right now.  Therefore we can
+674  	                            # append to the callbacks list directly instead of
+675  	                            # using addCallbacks.
+676  	                            current.result.callbacks.append(current._continuation())
+677  	                            break
+678  	                        else:
+679  	                            # Yep, it did.  Steal it.
+680  	                            current.result.result = None
+681  	                            # Make sure _debugInfo's failure state is updated.
+682  	                            if current.result._debugInfo is not None:
+683  	                                current.result._debugInfo.failResult = None
+684  	                            current.result = resultResult
+685  	
+686  	            if finished:
+687  	                # As much of the callback chain - perhaps all of it - as can be
+688  	                # processed right now has been.  The current Deferred is waiting on
+689  	                # another Deferred or for more callbacks.  Before finishing with it,
+690  	                # make sure its _debugInfo is in the proper state.
+691  	                if isinstance(current.result, failure.Failure):
+692  	                    # Stash the Failure in the _debugInfo for unhandled error
+693  	                    # reporting.
+694  	                    current.result.cleanFailure()
+695  	                    if current._debugInfo is None:
+696  	                        current._debugInfo = DebugInfo()
+697  	                    current._debugInfo.failResult = current.result
+698  	                else:
+699  	                    # Clear out any Failure in the _debugInfo, since the result
+700  	                    # is no longer a Failure.
+701  	                    if current._debugInfo is not None:
+702  	                        current._debugInfo.failResult = None
+703  	
+704  	                # This Deferred is done, pop it from the chain and move back up
+705  	                # to the Deferred which supplied us with our result.
+706  	                chain.pop()
+(Pdb) current.result
+<Deferred at 0x7f620680a748 current result: <GET http://electsys.sjtu.edu.cn/edu/student/elect/electcheck.aspx?xklc=1>>
+(Pdb) dir(current.result)
+['__await__', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__iter__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__next__', '__reduce__', '__reduce_ex__', '__repr__', '__send__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_canceller', '_chainedTo', '_continuation', '_debugInfo', '_runCallbacks', '_runningCallbacks', '_startRunCallbacks', '_suppressAlreadyCalled', 'addBoth', 'addCallback', 'addCallbacks', 'addErrback', 'addTimeout', 'callback', 'callbacks', 'called', 'cancel', 'chainDeferred', 'debug', 'errback', 'pause', 'paused', 'result', 'unpause']
+(Pdb) dir(current.result.callbacks)
+['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+(Pdb) type(current.result.callbacks)
+<class 'list'>
+(Pdb) type(current.result.callbacks[0])
+*** IndexError: list index out of range
+(Pdb) type(current.result.callback)
+<class 'method'>
+(Pdb) dir(current.result.callback)
+['__call__', '__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__func__', '__ge__', '__get__', '__getattribute__', '__gt__', '__hash__', '__init__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__self__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) l
+653  	                                "Callback returned the Deferred "
+654  	                                "it was attached to; this breaks the "
+655  	                                "callback chain and will raise an "
+656  	                                "exception in the future.")
+657  	                    finally:
+658  ->	                        current._runningCallbacks = False
+659  	                except:
+660  	                    # Including full frame information in the Failure is quite
+661  	                    # expensive, so we avoid it unless self.debug is set.
+662  	                    current.result = failure.Failure(captureVars=self.debug)
+663  	                else:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(667)_runCallbacks()
+-> resultResult = getattr(current.result, 'result', _NO_RESULT)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(668)_runCallbacks()
+-> if resultResult is _NO_RESULT or isinstance(resultResult, Deferred) or current.result.paused:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(680)_runCallbacks()
+-> current.result.result = None
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(682)_runCallbacks()
+-> if current.result._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(684)_runCallbacks()
+-> current.result = resultResult
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) r
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()->None
+-> while chain:
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(563)_startRunCallbacks()->None
+-> self._runCallbacks()
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(455)callback()->None
+-> self._startRunCallbacks(result)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()
+-> return deferred
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()-><Deferred at ... result: None>
+-> return deferred
+(Pdb) l
+1299 	                    "with inlineCallbacks" % (
+1300 	                        ultimateTrace.tb_frame.f_code.co_name,
+1301 	                        appCodeTrace.tb_frame.f_code.co_name),
+1302 	                    DeprecationWarning, filename, lineno)
+1303 	            deferred.callback(e.value)
+1304 ->	            return deferred
+1305 	        except:
+1306 	            deferred.errback()
+1307 	            return deferred
+1308 	
+1309 	        if isinstance(result, Deferred):
+(Pdb) ll
+1241 	def _inlineCallbacks(result, g, deferred):
+1242 	    """
+1243 	    See L{inlineCallbacks}.
+1244 	    """
+1245 	    # This function is complicated by the need to prevent unbounded recursion
+1246 	    # arising from repeatedly yielding immediately ready deferreds.  This while
+1247 	    # loop and the waiting variable solve that by manually unfolding the
+1248 	    # recursion.
+1249 	
+1250 	    waiting = [True, # waiting for result?
+1251 	               None] # result
+1252 	
+1253 	    while 1:
+1254 	        try:
+1255 	            # Send the last result back as the result of the yield expression.
+1256 	            isFailure = isinstance(result, failure.Failure)
+1257 	            if isFailure:
+1258 	                result = result.throwExceptionIntoGenerator(g)
+1259 	            else:
+1260 	                result = g.send(result)
+1261 	        except StopIteration as e:
+1262 	            # fell off the end, or "return" statement
+1263 	            deferred.callback(getattr(e, "value", None))
+1264 	            return deferred
+1265 	        except _DefGen_Return as e:
+1266 	            # returnValue() was called; time to give a result to the original
+1267 	            # Deferred.  First though, let's try to identify the potentially
+1268 	            # confusing situation which results when returnValue() is
+1269 	            # accidentally invoked from a different function, one that wasn't
+1270 	            # decorated with @inlineCallbacks.
+1271 	
+1272 	            # The traceback starts in this frame (the one for
+1273 	            # _inlineCallbacks); the next one down should be the application
+1274 	            # code.
+1275 	            appCodeTrace = exc_info()[2].tb_next
+1276 	            if isFailure:
+1277 	                # If we invoked this generator frame by throwing an exception
+1278 	                # into it, then throwExceptionIntoGenerator will consume an
+1279 	                # additional stack frame itself, so we need to skip that too.
+1280 	                appCodeTrace = appCodeTrace.tb_next
+1281 	            # Now that we've identified the frame being exited by the
+1282 	            # exception, let's figure out if returnValue was called from it
+1283 	            # directly.  returnValue itself consumes a stack frame, so the
+1284 	            # application code will have a tb_next, but it will *not* have a
+1285 	            # second tb_next.
+1286 	            if appCodeTrace.tb_next.tb_next:
+1287 	                # If returnValue was invoked non-local to the frame which it is
+1288 	                # exiting, identify the frame that ultimately invoked
+1289 	                # returnValue so that we can warn the user, as this behavior is
+1290 	                # confusing.
+1291 	                ultimateTrace = appCodeTrace
+1292 	                while ultimateTrace.tb_next.tb_next:
+1293 	                    ultimateTrace = ultimateTrace.tb_next
+1294 	                filename = ultimateTrace.tb_frame.f_code.co_filename
+1295 	                lineno = ultimateTrace.tb_lineno
+1296 	                warnings.warn_explicit(
+1297 	                    "returnValue() in %r causing %r to exit: "
+1298 	                    "returnValue should only be invoked by functions decorated "
+1299 	                    "with inlineCallbacks" % (
+1300 	                        ultimateTrace.tb_frame.f_code.co_name,
+1301 	                        appCodeTrace.tb_frame.f_code.co_name),
+1302 	                    DeprecationWarning, filename, lineno)
+1303 	            deferred.callback(e.value)
+1304 ->	            return deferred
+1305 	        except:
+1306 	            deferred.errback()
+1307 	            return deferred
+1308 	
+1309 	        if isinstance(result, Deferred):
+1310 	            # a deferred was yielded, get the result.
+1311 	            def gotResult(r):
+1312 	                if waiting[0]:
+1313 	                    waiting[0] = False
+1314 	                    waiting[1] = r
+1315 	                else:
+1316 	                    _inlineCallbacks(r, g, deferred)
+1317 	
+1318 	            result.addBoth(gotResult)
+1319 	            if waiting[0]:
+1320 	                # Haven't called back yet, set flag so that we get reinvoked
+1321 	                # and return from the loop
+1322 	                waiting[0] = False
+1323 	                return deferred
+1324 	
+1325 	            result = waiting[1]
+1326 	            # Reset waiting to initial values for next loop.  gotResult uses
+1327 	            # waiting, but this isn't a problem because gotResult is only
+1328 	            # executed once, and if it hasn't been executed yet, the return
+1329 	            # branch above would have been taken.
+1330 	
+1331 	
+1332 	            waiting[0] = True
+1333 	            waiting[1] = None
+1334 	
+1335 	
+1336 	    return deferred
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1316)gotResult()->None
+-> _inlineCallbacks(r, g, deferred)
+(Pdb) l
+1311 	            def gotResult(r):
+1312 	                if waiting[0]:
+1313 	                    waiting[0] = False
+1314 	                    waiting[1] = r
+1315 	                else:
+1316 ->	                    _inlineCallbacks(r, g, deferred)
+1317 	
+1318 	            result.addBoth(gotResult)
+1319 	            if waiting[0]:
+1320 	                # Haven't called back yet, set flag so that we get reinvoked
+1321 	                # and return from the loop
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) l
+653  	                                "Callback returned the Deferred "
+654  	                                "it was attached to; this breaks the "
+655  	                                "callback chain and will raise an "
+656  	                                "exception in the future.")
+657  	                    finally:
+658  ->	                        current._runningCallbacks = False
+659  	                except:
+660  	                    # Including full frame information in the Failure is quite
+661  	                    # expensive, so we avoid it unless self.debug is set.
+662  	                    current.result = failure.Failure(captureVars=self.debug)
+663  	                else:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(686)_runCallbacks()
+-> if finished:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(691)_runCallbacks()
+-> if isinstance(current.result, failure.Failure):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(701)_runCallbacks()
+-> if current._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(706)_runCallbacks()
+-> chain.pop()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()->None
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(563)_startRunCallbacks()->None
+-> self._runCallbacks()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(455)callback()->None
+-> self._startRunCallbacks(result)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(686)_runCallbacks()
+-> if finished:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(691)_runCallbacks()
+-> if isinstance(current.result, failure.Failure):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(701)_runCallbacks()
+-> if current._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(706)_runCallbacks()
+-> chain.pop()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()
+-> while chain:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(612)_runCallbacks()
+-> current = chain[-1]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(614)_runCallbacks()
+-> if current.paused:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(620)_runCallbacks()
+-> finished = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(621)_runCallbacks()
+-> current._chainedTo = None
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(686)_runCallbacks()
+-> if finished:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(691)_runCallbacks()
+-> if isinstance(current.result, failure.Failure):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(701)_runCallbacks()
+-> if current._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(706)_runCallbacks()
+-> chain.pop()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()->None
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(563)_startRunCallbacks()->None
+-> self._runCallbacks()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(455)callback()->None
+-> self._startRunCallbacks(result)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/scrapy/core/downloader/handlers/http11.py(408)connectionLost()->None
+-> self._finished.callback((self._txresponse, body, None))
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1173)_bodyDataFinished_CONNECTED()
+-> self._bodyProtocol = None
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1174)_bodyDataFinished_CONNECTED()
+-> self._state = 'FINISHED'
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1174)_bodyDataFinished_CONNECTED()->None
+-> self._state = 'FINISHED'
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(916)dispatcher()->None
+-> return func(*args, **kwargs)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(537)connectionLost()->None
+-> self.response._bodyDataFinished()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1525)_disconnectParser()->None
+-> parser.connectionLost(reason)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1499)_finishResponse_WAITING()->None
+-> self._disconnectParser(reason)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(916)dispatcher()->None
+-> return func(*args, **kwargs)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(440)_finished()->None
+-> self.finisher(rest)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/http.py(1442)dataReceived()->None
+-> finishCallback(data[contentLength:])
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(299)rawDataReceived()->None
+-> self.bodyDecoder.dataReceived(data)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(579)dataReceived()
+-> if why:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(555)dataReceived()
+-> while self._buffer and not self.paused:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(582)dataReceived()
+-> self._busyReceiving = False
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(582)dataReceived()->None
+-> self._busyReceiving = False
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(385)dataReceived()->None
+-> HTTPParser.dataReceived(self, data)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1545)dataReceived()->None
+-> self._parser.dataReceived(bytes)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/endpoints.py(116)dataReceived()->None
+-> return self._wrappedProtocol.dataReceived(data)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(215)_dataReceived()
+-> if rval is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(224)_dataReceived()
+-> return rval
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(224)_dataReceived()->None
+-> return rval
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(208)doRead()->None
+-> return self._dataReceived(data)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(598)_doReadOrWrite()
+-> inRead = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(599)_doReadOrWrite()
+-> if not why and event & self._POLL_OUT:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(609)_doReadOrWrite()
+-> if why:
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(609)_doReadOrWrite()->None
+-> if why:
+(Pdb) r
+> /usr/local/lib/python3.5/dist-packages/twisted/python/context.py(83)callWithContext()
+-> self.contexts.pop()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/context.py(83)callWithContext()->None
+-> self.contexts.pop()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/context.py(118)callWithContext()->None
+-> return self.currentContext().callWithContext(ctx, func, *args, **kw)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/log.py(84)callWithContext()->None
+-> return context.call({ILogContext: newCtx}, func, *args, **kw)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/log.py(101)callWithLogger()->None
+-> return callWithContext({"system": lp}, func, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/epollreactor.py(229)doPoll()
+-> for fd, event in l:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/epollreactor.py(229)doPoll()->None
+-> for fd, event in l:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1201)mainLoop()
+-> while self._started:
+(Pdb) 
+2016-12-06 23:02:28 [scrapy] INFO: Crawled 1 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(155)process_response()
+-> if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
+(Pdb) l
+150  	    def process_response(self, request, response, spider):
+151  	        set_trace()
+152  	        # if not self.cookie_queue.empty():
+153  	        #     self.cookie_queue.task_done()
+154  	
+155  ->	        if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
+156  	            self._put(request.cookies)
+157  	            # pass
+158  	        else:
+159  	            # self.cookie_count -= 1
+160  	            logger.info('Cookie %s is out of date.' % request.cookies)
+(Pdb) r
+2016-12-06 23:03:01 [course_collector.mycookie] DEBUG: id: 1
+2016-12-06 23:03:01 [course_collector.mycookie] DEBUG: usage_count: 1
+--Return--
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(162)process_response()-><302 http://e...k.aspx?xklc=1>
+-> return response
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/scrapy/core/downloader/middleware.py(54)process_response()
+-> assert isinstance(response, (Response, Request)), \
+(Pdb) 
+2016-12-06 23:03:06 [scrapy] DEBUG: Redirecting (302) to <GET http://electsys.sjtu.edu.cn/edu/messagePage.aspx?message=%e5%af%b9%e4%b8%8d%e8%b5%b7%2c%e4%bd%a0%e7%9b%ae%e5%89%8d%e4%b8%8d%e8%83%bd%e8%bf%9b%e8%a1%8c%e8%af%a5%e8%bd%ae%e9%80%89%e8%af%be> from <GET http://electsys.sjtu.edu.cn/edu/student/elect/electcheck.aspx?xklc=1>
+2016-12-06 23:03:06 [scrapy] INFO: Crawled 1 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(155)process_response()
+-> if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
+(Pdb) 
+(Pdb) 
+(Pdb) r
+2016-12-06 23:03:14 [course_collector.mycookie] DEBUG: id: 1
+2016-12-06 23:03:14 [course_collector.mycookie] DEBUG: usage_count: 1
+--Return--
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(162)process_response()-><200 http://e...0%89%e8%af%be>
+-> return response
+(Pdb) n
+--Return--
+> /usr/local/lib/python3.5/dist-packages/scrapy/core/downloader/middleware.py(53)process_response()-><200 http://e...0%89%e8%af%be>
+-> spider=spider)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) 
+2016-12-06 23:03:24 [course_collector.myredirect] DEBUG: 对不起,你目前不能进行该轮选课
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1309)_inlineCallbacks()
+-> if isinstance(result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1254)_inlineCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1256)_inlineCallbacks()
+-> isFailure = isinstance(result, failure.Failure)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1257)_inlineCallbacks()
+-> if isFailure:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) 
+twisted.internet.defer._DefGen_Return: <POST http://electsys.sjtu.edu.cn/edu/student/elect/electwarning.aspx?xklc=1>
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1260)_inlineCallbacks()
+-> result = g.send(result)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1261)_inlineCallbacks()
+-> except StopIteration as e:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1265)_inlineCallbacks()
+-> except _DefGen_Return as e:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1275)_inlineCallbacks()
+-> appCodeTrace = exc_info()[2].tb_next
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1276)_inlineCallbacks()
+-> if isFailure:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1286)_inlineCallbacks()
+-> if appCodeTrace.tb_next.tb_next:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1303)_inlineCallbacks()
+-> deferred.callback(e.value)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()
+-> return deferred
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()-><Deferred at ....aspx?xklc=1>>
+-> return deferred
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1406)unwindGenerator()-><Deferred at ....aspx?xklc=1>>
+-> return _inlineCallbacks(None, gen, Deferred())
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(667)_runCallbacks()
+-> resultResult = getattr(current.result, 'result', _NO_RESULT)
+(Pdb) n
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(668)_runCallbacks()
+-> if resultResult is _NO_RESULT or isinstance(resultResult, Deferred) or current.result.paused:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(680)_runCallbacks()
+-> current.result.result = None
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(682)_runCallbacks()
+-> if current.result._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(684)_runCallbacks()
+-> current.result = resultResult
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(623)_runCallbacks()
+-> item = current.callbacks.pop(0)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(624)_runCallbacks()
+-> callback, args, kw = item[
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(625)_runCallbacks()
+-> isinstance(current.result, failure.Failure)]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(626)_runCallbacks()
+-> args = args or ()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(627)_runCallbacks()
+-> kw = kw or {}
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(630)_runCallbacks()
+-> if callback is _CONTINUE:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(646)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(647)_runCallbacks()
+-> current._runningCallbacks = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(648)_runCallbacks()
+-> try:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(649)_runCallbacks()
+-> current.result = callback(current.result, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(686)_runCallbacks()
+-> if finished:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(691)_runCallbacks()
+-> if isinstance(current.result, failure.Failure):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(701)_runCallbacks()
+-> if current._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(706)_runCallbacks()
+-> chain.pop()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()->None
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(563)_startRunCallbacks()->None
+-> self._runCallbacks()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(455)callback()->None
+-> self._startRunCallbacks(result)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()
+-> return deferred
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1304)_inlineCallbacks()-><Deferred at ... result: None>
+-> return deferred
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(1316)gotResult()->None
+-> _inlineCallbacks(r, g, deferred)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(686)_runCallbacks()
+-> if finished:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(691)_runCallbacks()
+-> if isinstance(current.result, failure.Failure):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(701)_runCallbacks()
+-> if current._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(706)_runCallbacks()
+-> chain.pop()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()->None
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(563)_startRunCallbacks()->None
+-> self._runCallbacks()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(455)callback()->None
+-> self._startRunCallbacks(result)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(650)_runCallbacks()
+-> if current.result is current:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(658)_runCallbacks()
+-> current._runningCallbacks = False
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(664)_runCallbacks()
+-> if isinstance(current.result, Deferred):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(686)_runCallbacks()
+-> if finished:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(691)_runCallbacks()
+-> if isinstance(current.result, failure.Failure):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(701)_runCallbacks()
+-> if current._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(706)_runCallbacks()
+-> chain.pop()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()
+-> while chain:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(612)_runCallbacks()
+-> current = chain[-1]
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(614)_runCallbacks()
+-> if current.paused:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(620)_runCallbacks()
+-> finished = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(621)_runCallbacks()
+-> current._chainedTo = None
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(622)_runCallbacks()
+-> while current.callbacks:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(686)_runCallbacks()
+-> if finished:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(691)_runCallbacks()
+-> if isinstance(current.result, failure.Failure):
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(701)_runCallbacks()
+-> if current._debugInfo is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(706)_runCallbacks()
+-> chain.pop()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(611)_runCallbacks()->None
+-> while chain:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(563)_startRunCallbacks()->None
+-> self._runCallbacks()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/defer.py(455)callback()->None
+-> self._startRunCallbacks(result)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/scrapy/core/downloader/handlers/http11.py(408)connectionLost()->None
+-> self._finished.callback((self._txresponse, body, None))
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1173)_bodyDataFinished_CONNECTED()
+-> self._bodyProtocol = None
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1174)_bodyDataFinished_CONNECTED()
+-> self._state = 'FINISHED'
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1174)_bodyDataFinished_CONNECTED()->None
+-> self._state = 'FINISHED'
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(916)dispatcher()->None
+-> return func(*args, **kwargs)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(537)connectionLost()->None
+-> self.response._bodyDataFinished()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1525)_disconnectParser()->None
+-> parser.connectionLost(reason)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1499)_finishResponse_WAITING()->None
+-> self._disconnectParser(reason)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(916)dispatcher()->None
+-> return func(*args, **kwargs)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(440)_finished()->None
+-> self.finisher(rest)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/http.py(1442)dataReceived()->None
+-> finishCallback(data[contentLength:])
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(299)rawDataReceived()->None
+-> self.bodyDecoder.dataReceived(data)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(579)dataReceived()
+-> if why:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(555)dataReceived()
+-> while self._buffer and not self.paused:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(582)dataReceived()
+-> self._busyReceiving = False
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/protocols/basic.py(582)dataReceived()->None
+-> self._busyReceiving = False
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(385)dataReceived()->None
+-> HTTPParser.dataReceived(self, data)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/web/_newclient.py(1545)dataReceived()->None
+-> self._parser.dataReceived(bytes)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/endpoints.py(116)dataReceived()->None
+-> return self._wrappedProtocol.dataReceived(data)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(215)_dataReceived()
+-> if rval is not None:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(224)_dataReceived()
+-> return rval
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(224)_dataReceived()->None
+-> return rval
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/tcp.py(208)doRead()->None
+-> return self._dataReceived(data)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(598)_doReadOrWrite()
+-> inRead = True
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(599)_doReadOrWrite()
+-> if not why and event & self._POLL_OUT:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(609)_doReadOrWrite()
+-> if why:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/posixbase.py(609)_doReadOrWrite()->None
+-> if why:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/python/context.py(83)callWithContext()
+-> self.contexts.pop()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/context.py(83)callWithContext()->None
+-> self.contexts.pop()
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/context.py(118)callWithContext()->None
+-> return self.currentContext().callWithContext(ctx, func, *args, **kw)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/log.py(84)callWithContext()->None
+-> return context.call({ILogContext: newCtx}, func, *args, **kw)
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/python/log.py(101)callWithLogger()->None
+-> return callWithContext({"system": lp}, func, *args, **kw)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/epollreactor.py(229)doPoll()
+-> for fd, event in l:
+(Pdb) 
+--Return--
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/epollreactor.py(229)doPoll()->None
+-> for fd, event in l:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1201)mainLoop()
+-> while self._started:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1204)mainLoop()
+-> self.runUntilCurrent()
+(Pdb) 
+2016-12-06 23:03:53 [scrapy] INFO: Crawled 1 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1205)mainLoop()
+-> t2 = self.timeout()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1206)mainLoop()
+-> t = self.running and t2
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1207)mainLoop()
+-> self.doIteration(t)
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1201)mainLoop()
+-> while self._started:
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1204)mainLoop()
+-> self.runUntilCurrent()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1205)mainLoop()
+-> t2 = self.timeout()
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1206)mainLoop()
+-> t = self.running and t2
+(Pdb) 
+> /usr/local/lib/python3.5/dist-packages/twisted/internet/base.py(1207)mainLoop()
+-> self.doIteration(t)
+(Pdb) 
+> /home/yuq/Documents/projects/python/elecysys/course_collector/course_collector/mycookie.py(155)process_response()
+-> if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
+(Pdb) 
+(Pdb) 

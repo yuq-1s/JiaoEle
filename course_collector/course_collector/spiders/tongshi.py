@@ -22,6 +22,7 @@ TEST_TONGSHI_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE_fil
 TEST_RENWEN_URL = 'http://localhost/ele/website/%E9%80%9A%E8%AF%86%E8%AF%BE-%E4%BA%BA%E6%96%87_files/speltyCommonCourse.html'
 TEST_RENXUAN_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E8%88%B9%E5%BB%BA_files/outSpeltyEP.html'
 TEST_SHUXUE_URL = 'http://localhost/ele/website/%E4%BB%BB%E9%80%89%E8%AF%BE-%E6%95%B0%E5%AD%A6_files/outSpeltyEP.html'
+TEST_FULL_URL = 'http://localhost/ele/website/%28%E9%80%89%E7%A7%AF%E6%9E%81%E5%BF%83%E7%90%86%E5%AD%A6%29%E4%BA%BA%E6%BB%A1%E4%BA%86_files/messagePage.html'
 
 
 # TODO: Make a pool of cookies and asp_values
@@ -244,7 +245,7 @@ class TongShiSpider(Spider):
     def test(self, response):
         # inspect_response(response, self)
         r = FormRequest.from_response(response,
-                 url= ELECT_URL+'electwarning.aspx?xklc=1',
+                 url= ELECT_URL+'electwarning.aspx?xklc=1',# TEST_FULL_URL,
                  formdata={'CheckBox1': 'on', 'btnContinue': '继续'},
                  dont_filter=True,
                  callback=self.test)

@@ -1,16 +1,42 @@
 from pdb import set_trace
-from scrapy.http import Request
+from scrapy.http import Request, FormRequest
 from scrapy.item import BaseItem
 from scrapy.shell import inspect_response
 from scrapy.exceptions import NotConfigured
 from scrapy import signals
 from urllib.parse import urlparse
 from jaccount import login
-from time import time, sleep
+from time import clock, sleep
 from copy import deepcopy
 from threading import get_ident
 import queue
 import logging
+
+logger = logging.getLogger(__name__)
+usage_update = 0
+
+# TODO: @property may help?
+class TimedCookie(object):
+    def __init__(self, cookie):
+        self.cookie = cookie
+        self.last_used = clock()
+        if not cookie.get('usage_count', False):
+            global usage_update
+            self.cookie['usage_count'] = usage_update
+        # if not cookie.get('id', False):
+        #     # set_trace()
+        #     # logger.debug(cookie_count)
+        #     global cookie_count
+        #     self.cookie['id'] = cookie_count
+        #     cookie_count += 1
+            # logger.debug(self._cookie_count)
+        # self.id = self._cookie_count
+        # self._cookie_count += 1
+        # logger.debug("Total: %d"%self._cookie_count)
+
+    def __lt__(self, other):
+        return self.cookie.get('usage_count', 0) < other.cookie.get('usage_count', 0)
+        # return self.last_used < other.last_used
 
 # TODO: schedule post requests until get page without message in url
 # TODO: MAX_COOKIE_NUMBER
@@ -21,15 +47,8 @@ class MyCookieMiddleware(object):
     #         }
     # ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
     #         '__EVENTARGUMENT', '__LASTFOCUS']
-    MIN_DELTA = 2
-    logger = logging.getLogger(__name__)
-    # cookie_queue = queue.Queue()
-    # logger.setLevel('INFO')
-
-    class TimedCookie(object):
-        def __init__(self, cookie):
-            self.cookie = cookie
-            self.last_used = time()
+    MIN_DELTA = 5
+    QUEUE_SIZE = 1
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -42,98 +61,112 @@ class MyCookieMiddleware(object):
         # TODO: signal???
         return o
 
+    def inspect_queue(self):
+        lst = []
+        while not self.cookie_queue.empty():
+            lst.append(self.cookie_queue.get())
+            self.cookie_queue.task_done()
+        print(len(lst))
+        for thing in lst:
+            self.cookie_queue.put(thing)
+
+
     def __init__(self, user, password):
         self.user = user
         self.passwd = password
-        self.cookie_count = 0
         # SPIDERS ARE USING THEIR OWN COOKIE_QUEUES............
-        self.cookie_queue = queue.Queue()
-        self.board = [0] * 7
-        # self.cookie_queue = cqueue
-        for i in range(7):
-            self.cookie_queue.put(self.TimedCookie(self._new_cookie()))
-        self.logger.debug('CookieQueue middleware start')
+        self.cookie_count = 0
+        self.cookie_queue = queue.PriorityQueue()
+        self.__normal_cookie = self._new_cookie()
+        # del(self.__normal_cookie['id'])
+        self.need_recycle = set()
+        # logger.debug('CookieQueue middleware start')
 
     # HACK: login() should be intended to get more cookies at a time.
     def _new_cookie(self):
-        self.cookie_count += 1
-        self.logger.info('Fetching new cookie... Total: %d' % self.cookie_count)
+        # self.cookie_count += 1
+        # self.board.append(min(self.board)+1)
+        # logger.info('Fetching new cookie... Total: %d' % self.cookie_count)
+        logger.debug('New Cookie')
+        # sleep(0.2)
         wanted = ('ASP.NET_SessionId', 'mail_test_cookie')
-        return {'ASP.NET_SessionId': 'snx3fqmdztwx0a453uys3f55',
+        cookie =  {'ASP.NET_SessionId': '1zfozn24kmpdi345zl5kja55',
                 'mail_test_cookie': 'IHIBHIAK', 'id': self.cookie_count}
+        self.cookie_count += 1
+        return cookie
         # return {s: login(self.user, self.passwd).cookies[s] for s in wanted}
 
     def _get_post_cookie(self):
         while True:
-            # self.logger.debug('Looping...')
             try:
-            # if not self.cookie_queue.empty():
-                timed_cookie = self.cookie_queue.get_nowait()
-                # sleep(0.1)
-                # self.logger.debug(timed_cookie.cookie)
-                # self.logger.debug(get_ident())
-                delta = time() - timed_cookie.last_used
-                cnt = self.board[timed_cookie.cookie['id']%7]
-                if delta >= self.MIN_DELTA and cnt < min(self.board) + 3:
-                    # self.logger.debug(time() - timed_cookie.last_used)
-                    # self.logger.debug(timed_cookie.last_used)
-                    # self.logger.debug(self.cookie_count)
-                    if delta < 5.1:
-                        self.board[timed_cookie.cookie['id']%7] += 1
-                        self.logger.debug('ID: %d' % timed_cookie.cookie['id'])
-                        self.logger.debug(self.board)
-                        return timed_cookie.cookie
-                    else:
-                        self.cookie_queue.put(self.TimedCookie(timed_cookie.cookie))
+                timed_cookie = self.cookie_queue.get(timeout = self.MIN_DELTA)# _nowait()
+                self.cookie_queue.task_done()
+                # logger.debug(timed_cookie.cookie)
+                # logger.debug("ID: %d" % timed_cookie.cookie['id'])
+                delta = clock() - timed_cookie.last_used
+                if delta >= self.MIN_DELTA:
+                    timed_cookie.cookie['usage_count'] += 1
+                    logger.debug("Usage Count %d"%timed_cookie.cookie['usage_count'])
+                    return timed_cookie.cookie
                 else:
                     self.cookie_queue.put(timed_cookie)
-                    continue
-                    # if not self.cookie_queue.full():
-                    #     self.logger.debug('Fetching new cookie...')
-                    #     return self._new_cookie()
+                    global usage_update
+                    usage_update = timed_cookie.cookie['usage_count']
+                    # logger.debug("update: %d" % usage_update)
+                    if self.cookie_count < 20:
+                        return self._new_cookie()
+                # inspect_queue(self.cookie_queue)
             except queue.Empty:
                 return self._new_cookie()
-
     def _get_other_cookie(self):
-        try:
-            return self.cookie_queue.get_nowait().cookie
-        except queue.Empty:
-            return self._new_cookie()
+        return self.__normal_cookie
+        # try:
+        #     cookie = self.cookie_queue.get(timeout = self.MIN_DELTA)# _nowait().cookie
+        #     self.cookie_queue.task_done()
+        #     return cookie
+        # except queue.Empty:
+        #     return self._new_cookie()
 
     def _put(self, cookie):
-        self.cookie_queue.task_done()
-        self.cookie_queue.put(self.TimedCookie(cookie))
+        self.inspect_queue()
+        if cookie['id'] in self.need_recycle:
+            logger.debug("Restoring: %d" % cookie['id'])
+            timed_cookie = TimedCookie(cookie)
+            self.cookie_queue.put(timed_cookie)
+            self.inspect_queue()
+            self.need_recycle.remove(cookie['id'])
 
     def _get(self, request):
         if request.method == 'POST':
-            return self._get_post_cookie()
+            cookie = self._get_post_cookie()
+            self.need_recycle.add(cookie['id'])
         else:
-            return self._get_other_cookie()
+            cookie = self._get_other_cookie()
+        return cookie
 
     def process_request(self, request, spider):
-        # inspect_response(response, spider)
-        # if 'message' in response.url:
-        #     self.logger.debug('Getting message url')
-        #     set_trace()
-        #     return (response.request,)
-
-        if request.cookies: 
-            # self.logger.debug(str(request.cookies))
-            return
+        if request.cookies:    return
 
         # TODO: Take care of GET requests
-        self.logger.debug('processing request %s...' % request)
+        # logger.debug('processing request %s...' % request)
         cookie = self._get(request)
-        # self._put(cookie)
         # assert 'asp.net_sessionid' in request.replace(cookies=cookie).cookies
         return request.replace(cookies = cookie)
 
     def process_response(self, request, response, spider):
+        # if not self.cookie_queue.empty():
+        #     self.cookie_queue.task_done()
+
         if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
+            # logger.debug("usage_count: %d" % request.cookies.get('usage_count', 0))
+            # if request.method == 'POST':
+            #     logger.debug(request)
+            # pass
             self._put(request.cookies)
+            # inspect_queue(self.cookie_queue)
         else:
-            self.cookie_count -= 1
-            self.logger.info('Cookie %s is out of date.' % request.cookies)
+            # self.cookie_count -= 1
+            logger.info('Cookie %s is out of date.' % request.cookies)
             response.cookies = self._get(request)
         return response
 
@@ -157,7 +190,7 @@ class MyCookieMiddleware(object):
 
 #     # TODO: Update a specific page's asp_param
 #     def update_params(self):
-#         self.logger.info('updating asp params...')
+#         logger.info('updating asp params...')
 #         self.params = self._get_params(_sess)
 
 
