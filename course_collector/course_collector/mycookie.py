@@ -128,7 +128,7 @@ class MyCookieMiddleware(object):
         #     return self._new_cookie()
 
     def _put(self, cookie):
-        self.inspect_queue()
+        # self.inspect_queue()
         if cookie['id'] in self.need_recycle:
             logger.debug("Restoring: %d" % cookie['id'])
             timed_cookie = TimedCookie(cookie)

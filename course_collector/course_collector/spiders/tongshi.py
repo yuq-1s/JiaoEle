@@ -11,8 +11,10 @@ from pdb import set_trace
 from logging import getLogger
 from bs4 import BeautifulSoup
 from functools import wraps
+from course_collector.items import Course
 import queue
 import requests
+import re
 
 EDU_URL = 'http://electsys.sjtu.edu.cn/edu/'
 ELECT_URL = EDU_URL+'student/elect/'
@@ -69,19 +71,6 @@ TEST_FULL_URL = 'http://localhost/ele/website/%28%E9%80%89%E7%A7%AF%E6%9E%81%E5%
 # def tongshi(sess)
 #     TONGSHI_PARAMS = 
 #     sess.post(url = urls['tongshi'], 
-
-class Course(Item):
-    course_type = Field()
-    cid = Field()
-    name = Field()
-    credit = Field()
-    teacher = Field()
-    duration = Field()
-    max_member = Field()
-    min_member = Field()
-    week = Field()
-    bsid = Field()
-    remark = Field()
 
 class CourseItemLoader(ItemLoader):
     # default_input_processor = MapCompose(lambda v: v.strip(), replace_escape_chars)
@@ -169,6 +158,7 @@ class TongShiSpider(Spider):
     def lesson_parser(self, response):
         trs = response.xpath('//table[@id="LessonTime1_gridMain"]/tbody/tr[re:test(@class,"tdcolour\d$")]')
         assert trs
+        # inspect_response(response, self)
         for tr in trs:
             loader = CourseItemLoader(response.meta['item'], selector=tr)
             loader.add_xpath('bsid', './/input[@name="myradiogroup"]/@value')
@@ -176,9 +166,36 @@ class TongShiSpider(Spider):
             loader.add_xpath('duration', './td[5]/text()')
             loader.add_xpath('max_member', './td[6]/text()')
             loader.add_xpath('min_member', './td[7]/text()')
-            loader.add_xpath('week', './td[10]/text()')
             loader.add_xpath('remark', './td[11]/text()')
+            # loader.add_xpath('week', ' ./td[10]/text()')
+            loader.add_value('week',
+                    self._weekday_parse(tr.xpath('./td[10]/text()').extract()))
+            # week_chunk = trs.xpath('./td[10]/text()')
             yield loader.load_item()
+
+    def _weekday_parse(self, info_lst):
+        def parse(text):
+            try:
+                schooltime = text.split('星期')[1]
+                weekday = '日一二三四五六'.index(schooltime[0])
+                period = tuple(int(i) for i in re.findall(r'\d+',schooltime))
+                assert len(period) == 2
+                return {weekday: period}
+            except IndexError:
+                return {}
+
+        parsed = {'单周':{}, '双周':{}}
+        if '单周' in info_lst:
+            single_week = True
+            for text in info_lst:
+                if text == '双周': single_week = False
+                parsed['单周' if single_week else '双周'].update(parse(text))
+        else:
+            for text in info_lst:
+                parsed['单周'].update(parse(text))
+                parsed['双周'].update(parse(text))
+        return str(parsed)
+
 
     def renxuan_1(self, response):
         facaulties = response.xpath('//select[@name="OutSpeltyEP1$dpYx"]/option')
@@ -233,14 +250,13 @@ class TongShiSpider(Spider):
          #    dont_filter=True, 
          #    callback=self.tongshi_1
         # )
-         # yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
-         #    # cookies = self.cookies,
-         #    dont_filter=True, 
-         #    callback=self.renxuan_1
-        # )
-         yield Request(ELECT_URL+'electwarning.aspx?xklc=1',
-                 dont_filter=True,
-                 callback=self.test)
+         yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
+            dont_filter=True, 
+            callback=self.renxuan_1
+        )
+         # yield Request(ELECT_URL+'electwarning.aspx?xklc=1',
+         #         dont_filter=True,
+         #         callback=self.test)
 
     def test(self, response):
         # inspect_response(response, self)

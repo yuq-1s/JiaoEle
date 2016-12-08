@@ -14,7 +14,11 @@ BOT_NAME = 'course_collector'
 SPIDER_MODULES = ['course_collector.spiders']
 NEWSPIDER_MODULE = 'course_collector.spiders'
 
+FEED_URI = 'file:///tmp/yuq_test_spider.csv'
+FEED_FORMAT = 'csv'
+FEED_EXPORT_ENCODING = 'utf-8'
 
+LOG_LEVEL = 'INFO'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'course_collector (+http://www.yourdomain.com)'
 
