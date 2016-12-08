@@ -244,6 +244,52 @@ class TongShiSpider(Spider):
             #         callback=self.lesson_parser
             # )
 
+    def qiangke(self, course):
+        if course.course_type in ['02', '03', '04', '05']:
+            query = {'kcdm': course.cid,
+                    'xklx': '通识',
+                    'redirectForm': 'speltyCommonCourse.aspx',
+                    'yxdm': None,
+                    'tskmk': 420,
+                    'kcmk': -1,
+                    'nj': '无'
+                    }
+            params = {'myradiogroup': course.bsid,
+                    '__EVENTTARGET': 'gridGModule$ctl' + course.xyid + '$radioButton',
+                    'LessonTime1$btnChoose': '选定此教师'
+                    }
+        else:
+            query = {'kcdm': course.cid,
+                    'xklx': '选修',
+                    'redirectForm': 'outSpeltyEp.aspx',
+                    'yxdm': course.course_type,
+                    # FIXME: nj may vary
+                    'nj': 2015,
+                    'kcmk':-1,
+                    'txkmk': -1
+                    }
+            params = {'myradiogroup': course.bsid,
+                    'LessonTime1$btnChoose': '选定此教师'
+                    }
+        url = LESSON_URL+'viewLessonArrange.aspx?'+urlencode(query)
+        yield Request(url=url, dont_filter=True, callback=self.qiangke,
+                meta={'params': params, 'course_name': course.name})
+
+    def __do_qiangke(self, response):
+        yield FormRequest.from_response(response,
+                 # url= ELECT_URL+'electwarning.aspx?xklc=1',# TEST_FULL_URL,
+                 formdata=response.meta['params'],
+                 dont_filter=True,
+                 callback=self.submit
+                 )
+
+    def submit(self, response):
+        yield FormRequest.from_response(response,
+                formdata={'btnSubmit', '选课提交'},
+                dont_filter=True)
+        logger.critical('Course %s got!'%response.meta['course_name'])
+
+
     def start_requests(self):
          # yield Request(TEST_TONGSHI_URL,# ELECT_URL+'speltyCommonCourse.aspx',
          #    cookies = self.cookies,
