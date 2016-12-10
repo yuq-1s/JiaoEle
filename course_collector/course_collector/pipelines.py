@@ -16,9 +16,9 @@ class CourseCollectorPipeline(object):
         self.bsid_seen = set()
 
     def process_item(self, item, spider):
-        logger.info(item['week'])
         if item['bsid'][0] in self.bsid_seen:
-            raise DropItem("Duplicate item found: %s"%item)
+            raise DropItem
+            # raise DropItem("Duplicate item found: %s"%item)
         else:
             self.bsid_seen.add(item['bsid'][0])
             return item

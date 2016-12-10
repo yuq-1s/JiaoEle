@@ -15,6 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 usage_update = 0
 
+# TODO: Store cookies for futher usage.
 # TODO: @property may help?
 class TimedCookie(object):
     def __init__(self, cookie):
@@ -157,6 +158,7 @@ class MyCookieMiddleware(object):
         # if not self.cookie_queue.empty():
         #     self.cookie_queue.task_done()
 
+        # FIXME: Decrease cookie_count when outdated
         if urlparse(request.url).path.split('/')[-1] != 'outTimePage.aspx':
             # logger.debug("usage_count: %d" % request.cookies.get('usage_count', 0))
             # if request.method == 'POST':

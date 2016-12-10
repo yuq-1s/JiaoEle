@@ -1,6 +1,6 @@
 from scrapy import Spider
 from scrapy.http import Request, FormRequest
-from tongshi import LESSON_URL
+from course_collector.spiders.tongshi import LESSON_URL
 from logging import getLogger
 
 logger = getLogger(__name__)
