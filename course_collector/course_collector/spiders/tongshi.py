@@ -173,9 +173,9 @@ class TongShiSpider(Spider):
                         item['wend'] = info[4]
                         items.append(item)
                     return items
-                weeks=__to_item(re.findall(r'星期(\w)\s*第(\d+)节--第(\d+)节\s*(?:\w+\d+)\((\d+)-(\d+)周\)\.',info_str))
+                weeks=__to_item(re.findall(r'星期(\w)\s*第(\d+)节--第(\d+)节\s*(?:.*)\((\d+)-(\d+)周\)\.',info_str))
                 # FIXME: This regex fails when weeks of 2 teachers teach differ.
-                places=re.findall(r'星期(?:\w)\s*第(?:\d+)节--第(?:\d+)节\s*(\w+\d+)\((?:\d+)-(?:\d+)周\)\.',info_str)
+                places=re.findall(r'星期(?:\w)\s*第(?:\d+)节--第(?:\d+)节\s*(.*)\((?:\d+)-(?:\d+)周\)\.',info_str)
                 # weeks = set(re.findall(r'\((\d+)-(\d+)周\)\.', info_str))
                 # set_trace()
                 # weekday = re.findall(r'星期(\w)', info_str)

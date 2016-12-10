@@ -53,4 +53,4 @@ class SelectSpider(Spider):
         yield FormRequest.from_response(response,
                 formdata={'btnSubmit', '选课提交'},
                 dont_filter=True)
-        logger.critical('Course %s got!'%response.meta['self.course_name'])
+        # logger.critical('Course %s got!'%self.course.name)

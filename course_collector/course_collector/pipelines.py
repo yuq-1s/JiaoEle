@@ -8,6 +8,7 @@
 from scrapy.exceptions import DropItem
 from pdb import set_trace
 from logging import getLogger
+from course_collector.items import Course
 
 logger = getLogger(__name__)
 
@@ -16,9 +17,11 @@ class CourseCollectorPipeline(object):
         self.bsid_seen = set()
 
     def process_item(self, item, spider):
-        if item['bsid'][0] in self.bsid_seen:
-            raise DropItem
-            # raise DropItem("Duplicate item found: %s"%item)
-        else:
-            self.bsid_seen.add(item['bsid'][0])
-            return item
+        if isinstance(item, Course):
+            if item['bsid'][0] in self.bsid_seen:
+                raise DropItem
+                # raise DropItem("Duplicate item found: %s"%item)
+            else:
+                self.bsid_seen.add(item['bsid'][0])
+                return item
+        return item
