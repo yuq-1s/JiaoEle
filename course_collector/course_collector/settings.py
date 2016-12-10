@@ -15,7 +15,7 @@ SPIDER_MODULES = ['course_collector.spiders']
 NEWSPIDER_MODULE = 'course_collector.spiders'
 
 FEED_URI = 'file:///tmp/yuq_test_spider.json'
-FEED_FORMAT = 'jsonlines'
+FEED_FORMAT = 'json'
 FEED_EXPORT_ENCODING = 'utf-8'
 
 LOG_LEVEL = 'INFO'
