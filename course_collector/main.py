@@ -8,8 +8,10 @@ from course_collector.spiders.tongshi import TongShiSpider
 from logging import getLogger
 from twisted.internet import reactor
 from pdb import set_trace
+import time
 import json
 import os
+import sys
 
 logger = getLogger(__name__)
 
@@ -36,23 +38,49 @@ def load_file(filename):
 
 # TODO: Make Spiders share the cookie middleware.
 class Main(object):
+    CURRENT_PATH = Path(get_feed_path(CurrentSpider))
+    COURSES_PATH = Path(get_feed_path(TongShiSpider))
+    EXPIRE_SEC = 900
     def __init__(self, user, passwd):
-        process = CrawlerProcess()
-        if not Path(get_feed_path(CurrentSpider)).is_file():
-            process.crawl(CurrentSpider)
-        if not Path(get_feed_path(TongShiSpider)).is_file():
+        process = CrawlerProcess(get_project_settings())
+        need_restart = False
+
+        if not CURRENT_PATH.is_file() or \
+                time.time()-CURRENT_PATH.stat().st_mtime>EXPIRE_SEC:
+            try:
+                os.remove(CURRENT_PATH)
+            except FileNotFoundError:
+                pass
             process.crawl(TongShiSpider, user, passwd)
-        process.start()
+            need_restart = True
+        if not COURSES_PATH.is_file():
+            process.crawl(CurrentSpider)
+            need_restart = True
+        if need_restart:
+            process.start()
+            os.execl(sys.executable, sys.executable, *sys.argv)
 
         self.current = load_file(get_feed_path(CurrentSpider))
         self.courses = load_file(get_feed_path(TongShiSpider))
 
-    def list_all(self):
-        for c in self.current:
-            print(c['name'])
+        self.ls_all()
 
+    def ls_all(self):
         for c in self.courses:
             print(c['name'])
+
+    def get_all_non_overlap(self):
+        return [c for c in self.courses for curr in self.current if not
+                are_overlap(c, curr)]
+
+        # for course in self.courses:
+        #     for curr in self.current:
+        #         if not are_overlap(course, curr):
+        #             print(course['name'])
+
+    def non_overlap_by_time(self, courses):
+        '''Usage: <2, 1, 3[, 1, 8][, 'o']>[...]
+        '''
 
 # TODO: argparse
 def main():
