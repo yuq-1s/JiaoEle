@@ -1,18 +1,36 @@
 from scrapy import Spider, Item, Field
 from scrapy.loader import ItemLoader
+from scrapy.http import Request
 from course_collector.items import Course, CourseTime
+from course_collector.spiders.tongshi import ELECT_URL
 from pdb import set_trace
 import numpy
 import re
+import os
 
 TEST_URL = 'http://localhost/ele/website/%E5%BF%AB%E9%80%9F%E9%80%80%E8%AF%BE%E7%95%8C%E9%9D%A2_files/removeLessonFast.html'
+TARGET_URL = ELECT_URL+'removeLessonFast.aspx'
 
 class CurrentSpider(Spider):
     name = "current"
-    start_urls=[TEST_URL]
+    custom_settings = {
+            'FEED_URI': 'file://'+os.getcwd()+'/data/current.json',
+            'FEED_FORMAT': 'json',
+            'FEED__EXPORT_ENCODING': 'utf-8',
+            'LOG_LEVEL': 'INFO',
+            'MYCOOKIE_ENABLED': True,
+            'ITEM_PIPELINES': {'course_collector.pipelines.current.CurrentPipeline': 300}
+            }
+
+    # start_urls=[TEST_URL]
+    def start_requests(self):
+        yield Request(TEST_URL, dont_filter=True, callback=self.parse)
+
+    # FIXME: MyCookieMiddleware shouldn't need these attributes
     def __init__(self):
         self.user = 'a'
         self.passwd = 'b'
+
     def parse(self, response):
         def __to_time(info, weekday, cend, cbegin):
             ct = CourseTime()
@@ -46,8 +64,6 @@ class CurrentSpider(Spider):
         parse_result = parse_table(response.css('table.alltab tbody tr'))
 
         courses = {}
-        odd_week_courses = []
-        even_week_courses = []
         for tr_i, tr in enumerate(response.css('td.classmain[rowspan]')):
             weekday = '一二三四五六日'[parse_result[tr_i][1]-1]
             cbegin = parse_result[tr_i][0]
