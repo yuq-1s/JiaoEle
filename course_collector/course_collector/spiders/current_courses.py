@@ -7,14 +7,19 @@ from pdb import set_trace
 import numpy
 import re
 import os
+from scrapy.shell import inspect_response
+from logging import getLogger
 
 TEST_URL = 'http://localhost/ele/website/%E5%BF%AB%E9%80%9F%E9%80%80%E8%AF%BE%E7%95%8C%E9%9D%A2_files/removeLessonFast.html'
 TARGET_URL = ELECT_URL+'removeLessonFast.aspx'
+RECOMMAND_URL = ELECT_URL+'RecommandTblOuter.aspx'
+
+logger = getLogger(__name__)
 
 class CurrentSpider(Spider):
     name = "current"
     custom_settings = {
-            'FEED_URI': 'file://'+os.getcwd()+'/data/current.json',
+            'FEED_URI': 'file://'+os.getcwd()+'/data/recommand.json',
             'FEED_FORMAT': 'json',
             'FEED__EXPORT_ENCODING': 'utf-8',
             'LOG_LEVEL': 'INFO',
@@ -24,7 +29,7 @@ class CurrentSpider(Spider):
 
     # start_urls=[TEST_URL]
     def start_requests(self):
-        yield Request(TEST_URL, dont_filter=True, callback=self.parse)
+        yield Request(RECOMMAND_URL, dont_filter=True, callback=self.parse)
 
     # FIXME: MyCookieMiddleware shouldn't need these attributes
     def __init__(self):
@@ -61,20 +66,23 @@ class CurrentSpider(Spider):
                     # ret[row_i].append(col_i)
             return ret
 
-        parse_result = parse_table(response.css('table.alltab tbody tr'))
+        # inspect_response(response, self)
+        parse_result = parse_table(response.css('table.alltab tr'))
 
         courses = {}
         for tr_i, tr in enumerate(response.css('td.classmain[rowspan]')):
             weekday = '一二三四五六日'[parse_result[tr_i][1]-1]
             cbegin = parse_result[tr_i][0]
-            cend = cbegin + int(tr.xpath('./@rowspan').extract_first())
+            cend = cbegin + int(tr.xpath('./@rowspan').extract_first())-1
             s = '\n'.join(tr.css('::text').extract())
 
-            both = re.findall('(.*)\s*(?:\(|（)(\d+)-(\d+)周(?:\)|）)\s*\[(\w+\d*)\](?!\n(?:单周|双周))', s)
-            odds = re.findall('(.*)\s*(?:\(|（)(\d+)-(\d+)周(?:\)|）)\s*\[(\w+\d*)\](?=\n(?:单周))', s)
-            evens = re.findall('(.*)\s*(?:\(|（)(\d+)-(\d+)周(?:\)|）)\s*\[(\w+\d*)\](?=\n(?:双周))', s)
+            both=re.findall('(.*)\s*(?:\(|（)(\d+)-(\d+)周(?:\)|）)\s*(?:\[(\w+\d*)\])?(?!\s*(?:单周|双周))', s)
+            odds=re.findall('(.*)\s*(?:\(|（)(\d+)-(\d+)周(?:\)|）)\s*(?:\[(\w+\d*)\])?(?=\s*(?:单周))', s)
+            evens=re.findall('(.*)\s*(?:\(|（)(\d+)-(\d+)周(?:\)|）)\s*(?:\[(\w+\d*)\])?(?=\s*(?:双周))', s)
             odds += both
             evens += both
+            logger.info(odds)
+            logger.info(evens)
 
             for odd in odds:
                 try:
@@ -87,9 +95,9 @@ class CurrentSpider(Spider):
                 try:
                     courses[even[0]]['even_week'].append(__to_time(even, weekday, cend, cbegin))
                 except KeyError:
-                    courses[odd[0]] = {'name': odd[0], 'place': odd[3],
+                    courses[even[0]] = {'name': even[0], 'place': even[3],
                         'odd_week':[], 'even_week': []}
                     courses[even[0]]['even_week'].append(__to_time(even, weekday, cend, cbegin))
-
+        set_trace()
         for course in courses.values():
             yield course

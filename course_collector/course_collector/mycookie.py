@@ -91,7 +91,7 @@ class MyCookieMiddleware(object):
         logger.debug('New Cookie')
         # sleep(0.2)
         wanted = ('ASP.NET_SessionId', 'mail_test_cookie')
-        cookie =  {'ASP.NET_SessionId': '1zfozn24kmpdi345zl5kja55',
+        cookie =  {'ASP.NET_SessionId': 'd3tlf13codbm5d55yywc0q55',
                 'mail_test_cookie': 'IHIBHIAK', 'id': self.cookie_count}
         self.cookie_count += 1
         return cookie

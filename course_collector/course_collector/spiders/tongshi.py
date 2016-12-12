@@ -38,8 +38,7 @@ class TongShiSpider(Spider):
             'FEED_FORMAT': 'json',
             'FEED__EXPORT_ENCODING': 'utf-8',
             'MYCOOKIE_ENABLED': True,
-            'ITEM_PIPELINES':
-            {'course_collector.pipelines.collector.CourseCollectorPipeline':300}
+            'ITEM_PIPELINES': {'course_collector.pipelines.collector.CourseCollectorPipeline':300}
             }
 
     def tongshi_1(self, response):
@@ -48,18 +47,18 @@ class TongShiSpider(Spider):
             params = {et_str: 'radioButton', '__EVENTTARGET': et_str}
             item = Course()
             item['course_type'] = course_type
-            yield Request(url=TEST_RENWEN_URL, 
-                    dont_filter=True,
-                    meta= {'item':item},
-                    callback = self.tongshi_2
-            )
-            # yield FormRequest.from_response(
-            #         response, 
-            #         url = TEST_RENWEN_URL,# ELECT_URL+'speltyCommonCourse.aspx'
-            #         formdata = params,
-            #         meta = {'item': item}, 
+            # yield Request(url=TEST_RENWEN_URL, 
+            #         dont_filter=True,
+            #         meta= {'item':item},
             #         callback = self.tongshi_2
             # )
+            yield FormRequest.from_response(
+                    response, 
+                    url = TEST_RENWEN_URL,# ELECT_URL+'speltyCommonCourse.aspx'
+                    formdata = params,
+                    meta = {'item': item}, 
+                    callback = self.tongshi_2
+            )
 
     def tongshi_2(self, response):
         trs = response.xpath('//table[@id="gridMain"]/tbody/tr[re:test(@class,"tdcolour\d$")]')
@@ -70,18 +69,18 @@ class TongShiSpider(Spider):
             loader.add_xpath('name', './td[2]/text()')
             loader.add_xpath('cid', './td[3]/text()')
             loader.add_xpath('credit', './td[5]/text()')
-            yield Request(url=TEST_LESSON_URL, 
-                    dont_filter=True,
-                    meta= {'item':loader.load_item()},
-                    callback = self.lesson_parser
-            )
-            # yield FormRequest.from_response(
-            #     response, 
-            #     url = TEST_LESSON_URL,# ELECT_URL+'viewLessonArrange.aspx'
-            #     formdata={'myradiogroup': str(cid),'lessonArrange': '课程安排'},
-            #     meta={'item': loader.load_item()},
-            #     callback=self.lesson_parser
+            # yield Request(url=TEST_LESSON_URL, 
+            #         dont_filter=True,
+            #         meta= {'item':loader.load_item()},
+            #         callback = self.lesson_parser
             # )
+            yield FormRequest.from_response(
+                response, 
+                url = TEST_LESSON_URL,# ELECT_URL+'viewLessonArrange.aspx'
+                formdata={'myradiogroup': str(cid),'lessonArrange': '课程安排'},
+                meta={'item': loader.load_item()},
+                callback=self.lesson_parser
+            )
 
     def lesson_parser(self, response):
         # FIXME: Replace these functions with nested item loaders.
@@ -147,17 +146,17 @@ class TongShiSpider(Spider):
                         }
                 loader = ItemLoader(Course(), selector=facaulty)
                 loader.add_xpath('course_type', './@value')
-                yield Request(url=TEST_SHUXUE_URL, 
-                        dont_filter=True, 
-                        meta= {'item':loader.load_item()},
-                        callback = self.renxuan_2
-                )
-                # yield FormRequest.from_response(
-                #         response, 
-                #         formdata = params,
-                #         meta = {'item': loader.load_item()}, 
+                # yield Request(url=TEST_SHUXUE_URL, 
+                #         dont_filter=True, 
+                #         meta= {'item':loader.load_item()},
                 #         callback = self.renxuan_2
                 # )
+                yield FormRequest.from_response(
+                        response, 
+                        formdata = params,
+                        meta = {'item': loader.load_item()}, 
+                        callback = self.renxuan_2
+                )
 
     def renxuan_2(self, response):
         trs = response.xpath('//table[@id="OutSpeltyEP1_gridMain"]/tbody/tr[re:test(@class,"tdcolour\d$")]')
@@ -167,32 +166,32 @@ class TongShiSpider(Spider):
             loader.add_xpath('name', './td[2]/text()')
             loader.add_xpath('cid', './td[3]/text()')
             loader.add_xpath('credit', './td[6]/text()')
-            yield Request(url=TEST_LESSON_URL, 
-                    dont_filter=True, 
-                    meta= {'item':loader.load_item()},
-                    callback = self.lesson_parser
-            )
-            # yield FormRequest.from_response(
-            #         response,
-            #         formdata={
-            #             'OutSpeltyEP1$dpYx':response.meta['item']['course_type'],
-            #             'OutSpeltyEP1$dpNj':response.meta['item']['grade'],
-            #             'myradiogroup':cid,
-            #             'OutSpeltyEP1$lessonArrange': '课程安排'
-            #         },
-            #         meta={'item': loader.load_item()},
-            #         callback=self.lesson_parser
+            # yield Request(url=TEST_LESSON_URL, 
+            #         dont_filter=True, 
+            #         meta= {'item':loader.load_item()},
+            #         callback = self.lesson_parser
             # )
+            yield FormRequest.from_response(
+                    response,
+                    formdata={
+                        'OutSpeltyEP1$dpYx':response.meta['item']['course_type'],
+                        'OutSpeltyEP1$dpNj':response.meta['item']['grade'],
+                        'myradiogroup':cid,
+                        'OutSpeltyEP1$lessonArrange': '课程安排'
+                    },
+                    meta={'item': loader.load_item()},
+                    callback=self.lesson_parser
+            )
 
     def start_requests(self):
          yield Request(TEST_TONGSHI_URL,# ELECT_URL+'speltyCommonCourse.aspx',
             dont_filter=True, 
             callback=self.tongshi_1
         )
-         # yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
-         #    dont_filter=True, 
-         #    callback=self.renxuan_1
-        # )
+         yield Request(TEST_RENXUAN_URL,# ELECT_URL+'outSpeltyEP.aspx',
+            dont_filter=True, 
+            callback=self.renxuan_1
+        )
          # yield Request(ELECT_URL+'electwarning.aspx?xklc=1',
          #         dont_filter=True,
          #         callback=self.test)
