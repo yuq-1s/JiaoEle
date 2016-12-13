@@ -18,7 +18,7 @@ FEED_URI = 'file:///tmp/yuq_test_spider.json'
 FEED_FORMAT = 'json'
 FEED_EXPORT_ENCODING = 'utf-8'
 
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'course_collector (+http://www.yourdomain.com)'
 
@@ -26,7 +26,7 @@ LOG_LEVEL = 'INFO'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 1
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
@@ -60,8 +60,8 @@ MYCOOKIE_ENABLED = True
 DOWNLOADER_MIDDLEWARES = {
     # 'course_collector.middlewares.MyCustomDownloaderMiddleware': 543,
     'scrapy.downloadmiddlewares.cookies': None,
-    'course_collector.myredirect.MyRedirectMiddleware': 600,
-    'course_collector.mycookie.MyCookieMiddleware': 955,
+    'course_collector.myredirect.MyRedirectMiddleware': 900,
+    'course_collector.mycookie.MyCookieMiddleware': 600,
     'scrapy.downloadermiddlewares.redirect.RedirectMiddleware': None
 }
 

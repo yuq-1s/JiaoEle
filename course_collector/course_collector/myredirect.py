@@ -1,25 +1,46 @@
 import logging
-from six.moves.urllib.parse import urljoin
 from scrapy.shell import inspect_response
 from pdb import set_trace
 from urllib.parse import urlparse, unquote
 from scrapy.downloadermiddlewares.redirect import RedirectMiddleware
-
-from w3lib.url import safe_url_string
-
+from course_collector.spiders.tongshi import ELECT_URL
+from bs4 import BeautifulSoup
+from time import sleep
 from scrapy.http import HtmlResponse, FormRequest, Response
-from scrapy.utils.response import get_meta_refresh
 from scrapy.exceptions import IgnoreRequest, NotConfigured
+import requests
 
 logger = logging.getLogger(__name__)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 class MyRedirectMiddleware(RedirectMiddleware):
     ''' This middleware is used to recover original post request when redirected
         to either the message page or the outTimePage.aspx.
     '''
 
+    ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
+                '__EVENTTARGET', '__EVENTARGUMENT', '__LASTFOCUS']
+
+    def __init__(self, *args, **kw):
+        super().__init__(*args, **kw)
+        # self.rejected = {}
+        # self.sess = requests.Session()
+        # self.params=requests
+        self.NEED_WAIT = [ELECT_URL+'speltyCommonCourse.aspx']
+
+    def __asp_params(self, page):
+        soup = BeautifulSoup(page, 'html.parser')
+        return {inp.get('name', ''): inp['value'] for inp in soup.find_all('input') if
+                inp.get('name', '') in self.ASP_FORM_ID}
+
     def _recover_post(self, request):
         try:
+            if not request.method in ['POST', 'GET']:
+                set_trace()
+            if not request.meta['post_body']:
+                set_trace()
+            # logger.debug(request.meta['post_body'])
             return request.replace(url=request.meta['redirect_urls'][0],
                     body=request.meta['post_body'],
                     method='POST'
@@ -33,7 +54,38 @@ class MyRedirectMiddleware(RedirectMiddleware):
             logger.error("No form data recorded")
             raise IgnoreRequest("No form data recorded")
 
+    def __cookies(self, cookies):
+        ele_cookies_list = ['ASP.NET_SessionId', 'mail_test_cookie']
+        return {s: cookies[s] for s in ele_cookies_list}
+
+
+    def process_request(self, request, spider):
+        # if 'speltyCommonCourse.aspx' in request.url and request.method=='POST':
+        if True:
+            params=self.__asp_params(requests.get(ELECT_URL+'speltyCommonCourse.aspx',
+                cookies=self.__cookies(request.cookies)).text)
+            try:
+                # et_str = 'gridGModule$ctl'+request.meta['item']['course_type']+'$radioButton'
+                et_str = 'gridGModule$ctl02$radioButton'
+                params.update({et_str: 'radioButton'})
+                resp=requests.post(ELECT_URL+'speltyCommonCourse.aspx', data=params,
+                        cookies=self.__cookies(request.cookies))
+
+            except (AttributeError, KeyError):
+                pass
+
     def process_response(self, request, response, spider):
+        # if 'viewLessonArrange.aspx' in response.url and response.status==200:
+        #     try:
+        #         cid = re.search('kcdm=(\w{2}\d{3})', response.url).group(1)
+        #         if not cid:
+        #             set_trace()
+        #         set_trace()
+        #         del(self.rejected[cid])
+        #         return response
+        #     except KeyError:
+        #         pass
+        # set_trace()
         # TODO: Delete the outdated cookie
         if urlparse(request.url).path.split('/')[-1] == 'outTimePage.aspx':
             logger.debug('Cookie %s is out of date.' % request.cookies)
@@ -41,14 +93,22 @@ class MyRedirectMiddleware(RedirectMiddleware):
 
         if 'message=' in request.url:
             logger.debug(unquote(request.url).split('message=')[1])
+            # set_trace()
+            logger.debug(request.meta['item']['cid'][0] +' rejected.')
+            # self.rejected.update({request.meta['item']['cid'][0]:self._recover_post(request)})
             return self._recover_post(request)
 
         ret = RedirectMiddleware.process_response(self, request, response, spider)
 
         # Record data to be posted
-        if response.status == 302 and isinstance(request, FormRequest):
+        if response.status == 302 and request.method == 'POST':# isinstance(request, FormRequest):
+            # logger.debug(request.body)
+            if not request.body:
+                set_trace()
             ret.meta['post_body'] = request.body
 
+        # for req in self.rejected.values():
+            # return req
         return ret
 
 # class BaseRedirectMiddleware(object):

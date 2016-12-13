@@ -48,7 +48,7 @@ class MyCookieMiddleware(object):
     #         }
     # ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
     #         '__EVENTARGUMENT', '__LASTFOCUS']
-    MIN_DELTA = 5
+    MIN_DELTA = 0.1
     QUEUE_SIZE = 1
 
     @classmethod
@@ -91,8 +91,11 @@ class MyCookieMiddleware(object):
         logger.debug('New Cookie')
         # sleep(0.2)
         wanted = ('ASP.NET_SessionId', 'mail_test_cookie')
-        cookie =  {'ASP.NET_SessionId': 'd3tlf13codbm5d55yywc0q55',
+        cookie =  {'ASP.NET_SessionId': 'mikay2imywwyto55ykfpxa45',
                 'mail_test_cookie': 'IHIBHIAK', 'id': self.cookie_count}
+        # with open('cookies.txt', 'a') as f:
+        #     f.write(cookie)
+        #     f.write('\n')
         self.cookie_count += 1
         return cookie
         # return {s: login(self.user, self.passwd).cookies[s] for s in wanted}
@@ -146,6 +149,8 @@ class MyCookieMiddleware(object):
         return cookie
 
     def process_request(self, request, spider):
+        if not request.headers['Referer']==b'http://electsys.sjtu.edu.cn/edu/student/elect/speltyCommonCourse.aspx':
+            set_trace()
         if request.cookies:    return
 
         # TODO: Take care of GET requests
