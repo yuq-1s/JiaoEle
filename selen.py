@@ -52,6 +52,8 @@ class InitPage(BasePage):
     def init(self):
         self.driver.find_element_by_id('CheckBox1').click()
         self.driver.find_element_by_id('btnContinue').click()
+        sleep(0.1)
+        assert 'speltyR' in self.driver.current_url, 'init failed'
 
 class TongshiPage(BasePage):
     recover_url = ELECT_URL+'speltyCommonCourse.aspx'
@@ -60,7 +62,8 @@ class TongshiPage(BasePage):
     def get_courses_list(self, course_type):
         ct = ['rw', 'sk', 'zk', 'sx'].index(course_type)+2
         self.driver.find_element_by_xpath('//*[@id="gridGModule_ctl0%s_radioButton"]'%ct).click()
-        assert 'speltyCommonCourse' in self.driver.current_url, 'get course list failed.'
+        sleep(0.1)
+        assert '/speltyCommonCourse' in self.driver.current_url, 'get course list failed.'
 
 
     def get_name_by_cid(self, cid):
@@ -72,7 +75,8 @@ class TongshiPage(BasePage):
     def view_lesson_by_cid(self, cid):
         self.get_radio_by_cid(cid).click()
         self.driver.find_element_by_id('lessonArrange').click()
-        assert 'viewLessonArrange' in self.driver.current_url, 'view lesson failed'
+        sleep(0.1)
+        assert '/viewLessonArrange' in self.driver.current_url, 'view lesson failed'
 
     def submit(self):
         self.driver.find_element_by_id('btnSubmit').click()
@@ -88,12 +92,19 @@ class LessonPage(BasePage):
 
 class MessagePage(BasePage):
     def back(self):
-        self.driver.back()
+        try:
+            self.driver.find_element_by_id('btnContinue').click()
+        except NoSuchElementException:
+            self.driver.find_element_by_id('Button1').click()
+
+        # self.driver.back()
 
     def handle_message(self):
-        if 'message=' not in self.driver.current_url: return
-        message = self.driver.current_url.split('message=')[1]
-        logging.error(unquote(message))
+        # if 'message=' not in self.driver.current_url: return
+        message = unquote(self.driver.current_url.split('message=')[1])
+        if '刷新' in message: 
+            sleep(1)
+        logging.error(message)
         self.back()
 
 class Main(cmd.Cmd):
@@ -120,29 +131,40 @@ class Main(cmd.Cmd):
             for 抢人文课号为TH901, 老师代码为382102的
         '''
 
+        try:
+            ct, cid, bsid = re.search('([a-z]{2})\s+([A-Z]{2}\d{3})\s+(\d{6})', arg).groups()
+            initpage = InitPage(self.driver)
+            tongshipage = TongshiPage(self.driver)
+            lessonpage = LessonPage(self.driver)
+            messagepage = MessagePage(self.driver)
+        except Exception as e:
+            traceback.print_exc(file=sys.stdout)
+            logging.error(e)
+            return
+
         while True:
             try:
-                ct, cid, bsid = re.search('([a-z]{2})\s+([A-Z]{2}\d{3})\s+(\d{6})', arg).groups()
-                initpage = InitPage(self.driver)
-                tongshipage = TongshiPage(self.driver)
-                lessonpage = LessonPage(self.driver)
-                messagepage = MessagePage(self.driver)
-
                 initpage.init()
                 tongshipage.get_courses_list(ct)
+                sleep(1)
                 while True:
                     try:
                         tongshipage.view_lesson_by_cid(cid)
                         lessonpage.select_by_bsid(bsid)
-                        messagepage.back()
-                    except NoSuchElementException:
+                        messagepage.handle_message()
+                    except (NoSuchElementException, IndexError):
+                        assert '/speltyCommonCourse' in self.driver.current_url
                         sleep(1)
                         tongshipage.submit()
-                        self.driver.get(EDU_URL+'login.aspx')
+                        set_trace()
+                        # self.driver.get(EDU_URL+'login.aspx')
+                        logging.info('Success')
+                        return
 
-                return
             except AssertionError as e:
                 traceback.print_exc(file=sys.stdout)
+                if 'message=' in self.driver.current_url:
+                    messagepage.handle_message()
                 logging.error(e)
                 continue
 
