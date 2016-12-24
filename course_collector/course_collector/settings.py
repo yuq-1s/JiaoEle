@@ -19,6 +19,7 @@ FEED_FORMAT = 'json'
 FEED_EXPORT_ENCODING = 'utf-8'
 
 LOG_LEVEL = 'DEBUG'
+# LOG_FILE = 'scrapy.log'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'course_collector (+http://www.yourdomain.com)'
 

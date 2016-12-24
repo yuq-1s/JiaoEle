@@ -11,8 +11,10 @@ from copy import deepcopy
 from threading import get_ident
 import queue
 import logging
+import json
 
 logger = logging.getLogger(__name__)
+# FIXME: Put cookie['id'] and cookie['usage_count'] into requests' meta
 usage_update = 0
 
 # TODO: Store cookies for futher usage.
@@ -24,16 +26,6 @@ class TimedCookie(object):
         if not cookie.get('usage_count', False):
             global usage_update
             self.cookie['usage_count'] = usage_update
-        # if not cookie.get('id', False):
-        #     # set_trace()
-        #     # logger.debug(cookie_count)
-        #     global cookie_count
-        #     self.cookie['id'] = cookie_count
-        #     cookie_count += 1
-            # logger.debug(self._cookie_count)
-        # self.id = self._cookie_count
-        # self._cookie_count += 1
-        # logger.debug("Total: %d"%self._cookie_count)
 
     def __lt__(self, other):
         return self.cookie.get('usage_count', 0) < other.cookie.get('usage_count', 0)
@@ -48,7 +40,7 @@ class MyCookieMiddleware(object):
     #         }
     # ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
     #         '__EVENTARGUMENT', '__LASTFOCUS']
-    MIN_DELTA = 0.1
+    MIN_DELTA = 2
     QUEUE_SIZE = 1
 
     @classmethod
@@ -67,7 +59,6 @@ class MyCookieMiddleware(object):
         while not self.cookie_queue.empty():
             lst.append(self.cookie_queue.get())
             self.cookie_queue.task_done()
-        print(len(lst))
         for thing in lst:
             self.cookie_queue.put(thing)
 
@@ -75,13 +66,10 @@ class MyCookieMiddleware(object):
     def __init__(self, user, password):
         self.user = user
         self.passwd = password
-        # SPIDERS ARE USING THEIR OWN COOKIE_QUEUES............
         self.cookie_count = 0
         self.cookie_queue = queue.PriorityQueue()
         self.__normal_cookie = self._new_cookie()
-        # del(self.__normal_cookie['id'])
         self.need_recycle = set()
-        # logger.debug('CookieQueue middleware start')
 
     # HACK: login() should be intended to get more cookies at a time.
     def _new_cookie(self):
@@ -91,12 +79,13 @@ class MyCookieMiddleware(object):
         logger.debug('New Cookie')
         # sleep(0.2)
         wanted = ('ASP.NET_SessionId', 'mail_test_cookie')
-        cookie =  {'ASP.NET_SessionId': 'mikay2imywwyto55ykfpxa45',
+        cookie =  {'ASP.NET_SessionId': '0nnfgg55z2lm1055ekjrqg3n',
                 'mail_test_cookie': 'IHIBHIAK', 'id': self.cookie_count}
+        # cookie = {s: login(self.user, self.passwd).cookies[s] for s in wanted}
+        # cookie['id'] = self.cookie_count
         # with open('cookies.txt', 'a') as f:
-        #     f.write(cookie)
-        #     f.write('\n')
-        self.cookie_count += 1
+        #     json.dump(cookie, f)
+        # self.cookie_count += 1
         return cookie
         # return {s: login(self.user, self.passwd).cookies[s] for s in wanted}
 
@@ -105,8 +94,6 @@ class MyCookieMiddleware(object):
             try:
                 timed_cookie = self.cookie_queue.get(timeout = self.MIN_DELTA)# _nowait()
                 self.cookie_queue.task_done()
-                # logger.debug(timed_cookie.cookie)
-                # logger.debug("ID: %d" % timed_cookie.cookie['id'])
                 delta = clock() - timed_cookie.last_used
                 if delta >= self.MIN_DELTA:
                     timed_cookie.cookie['usage_count'] += 1
@@ -122,6 +109,7 @@ class MyCookieMiddleware(object):
                 # inspect_queue(self.cookie_queue)
             except queue.Empty:
                 return self._new_cookie()
+
     def _get_other_cookie(self):
         return self.__normal_cookie
         # try:
@@ -137,7 +125,6 @@ class MyCookieMiddleware(object):
             logger.debug("Restoring: %d" % cookie['id'])
             timed_cookie = TimedCookie(cookie)
             self.cookie_queue.put(timed_cookie)
-            self.inspect_queue()
             self.need_recycle.remove(cookie['id'])
 
     def _get(self, request):
@@ -149,8 +136,8 @@ class MyCookieMiddleware(object):
         return cookie
 
     def process_request(self, request, spider):
-        if not request.headers['Referer']==b'http://electsys.sjtu.edu.cn/edu/student/elect/speltyCommonCourse.aspx':
-            set_trace()
+        # if not request.headers['Referer']==b'http://electsys.sjtu.edu.cn/edu/student/elect/speltyCommonCourse.aspx':
+        #     set_trace()
         if request.cookies:    return
 
         # TODO: Take care of GET requests

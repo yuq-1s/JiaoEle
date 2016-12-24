@@ -19,7 +19,7 @@ logger = getLogger(__name__)
 class CurrentSpider(Spider):
     name = "current"
     custom_settings = {
-            'FEED_URI': 'file://'+os.getcwd()+'/data/recommand.json',
+            'FEED_URI': 'file://'+os.getcwd()+'/data/current.json',
             'FEED_FORMAT': 'json',
             'FEED__EXPORT_ENCODING': 'utf-8',
             'LOG_LEVEL': 'INFO',
@@ -29,7 +29,7 @@ class CurrentSpider(Spider):
 
     # start_urls=[TEST_URL]
     def start_requests(self):
-        yield Request(RECOMMAND_URL, dont_filter=True, callback=self.parse)
+        yield Request(TARGET_URL, dont_filter=True, callback=self.parse)
 
     # FIXME: MyCookieMiddleware shouldn't need these attributes
     def __init__(self):
