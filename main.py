@@ -2,17 +2,20 @@
 # -*- coding: utf-8 -*-
 # import jaccount, sdtMain
 
+from urllib.parse import unquote
 from pathlib import Path
-from scrapy.crawler import CrawlerProcess, CrawlerRunner
-from scrapy.utils.project import get_project_settings
-from course_collector.spiders.current_courses import CurrentSpider
-from course_collector.spiders.tongshi import TongShiSpider
 from logging import getLogger
-from twisted.internet import reactor
 from pdb import set_trace
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from functools import wraps
+from jaccount import login
+from time import sleep
+from concurrent.futures import ThreadPoolExecutor
 
 import xpinyin
+import traceback
+import logging
 import copy
 import time
 import json
@@ -62,9 +65,6 @@ def contains(course1, course2):
                 for p2 in course2[parity]):
             return False
     return True
-
-def get_feed_path(spider):
-    return spider.custom_settings['FEED_URI'].split('file://')[1]
 
 def load_file(filename):
         with open(filename, 'r') as f:
@@ -149,8 +149,8 @@ class MessagePage(BasePage):
         self.back()
 
 class Main(cmd.Cmd):
-    CURRENT_PATH = get_feed_path(CurrentSpider) # Path(get_feed_path(CurrentSpider))
-    COURSES_PATH = get_feed_path(TongShiSpider) # Path(get_feed_path(TongShiSpider))
+    CURRENT_PATH = 'data/current.json'
+    COURSES_PATH = 'data/courses1.json'
     EXPIRE_SEC = 900
     intro = '''Here is the evil software to grab courses of SJTU. Have fun ;)'''
     prompt = '>> '
@@ -297,17 +297,17 @@ class Main(cmd.Cmd):
     #     self.passwd = 'ca1l6ack' #input('Enter password: ')
 
     def update_cookies(self):
+        cookie =prepare_cookie(login(self.user, self.passwd))
+        print(cookie)
         self.cookies = prepare_cookie(login(self.user, self.passwd))
 
         for c in self.cookies:
             self.driver.add_cookie(c)
+        print('a')
 
-    def do_qiang(self, arg):
-        ''' Example: qiang rw TH901 382102
-            for 抢人文课号为TH901, 老师代码为382102的
-        '''
-
-        self.driver = webdriver.Chrome()
+    def do_do_qiang(self, arg):
+        print('a')
+        self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(1)
         self.driver.get(EDU_URL)
         self.update_cookies()
@@ -327,7 +327,7 @@ class Main(cmd.Cmd):
             try:
                 initpage.init()
                 tongshipage.get_courses_list(ct)
-                sleep(1)
+                # sleep(1)
                 while True:
                     try:
                         tongshipage.view_lesson_by_cid(cid)
@@ -367,6 +367,12 @@ class Main(cmd.Cmd):
                 logging.error(e)
                 return 
 
+    def do_qiang(self, arg):
+        ''' Example: qiang rw TH901 382102
+            for 抢人文课号为TH901, 老师代码为382102的
+        '''
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            print(executor.submit(self.do_do_qiang, arg).result)
 
 # TODO: Make Spiders share the cookie middleware.
 # class Main(cmd.Cmd):
