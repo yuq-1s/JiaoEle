@@ -18,10 +18,11 @@ class CourseCollectorPipeline(object):
 
     def process_item(self, item, spider):
         if isinstance(item, Course):
-            if item['bsid'][0] in self.bsid_seen:
+            if item['bsid'] in self.bsid_seen:
                 raise DropItem
                 # raise DropItem("Duplicate item found: %s"%item)
             else:
-                self.bsid_seen.add(item['bsid'][0])
-                return item
+                self.bsid_seen.add(item['bsid'])
+            # set_trace()
+            item['name'] = spider.num2name[item['cid']]
         return item
