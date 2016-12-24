@@ -5,7 +5,7 @@
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/items.html
 
-from scrapy.loader.processors import MapCompose
+from scrapy.loader.processors import MapCompose, TakeFirst
 from scrapy import Field, Item
 
 
@@ -15,26 +15,27 @@ from scrapy import Field, Item
 #     pass
 
 class CourseTime(Item):
-    weekday = Field()
-    cbegin = Field()
-    cend = Field()
-    wbegin = Field()
-    wend = Field()
+    weekday = Field(output_processor=TakeFirst())
+    cbegin = Field(output_processor=TakeFirst())
+    cend = Field(output_processor=TakeFirst())
+    wbegin = Field(output_processor=TakeFirst())
+    wend = Field(output_processor=TakeFirst())
 
 class Course(Item):
-    course_type = Field()
-    cid = Field(input_processor=MapCompose(str.strip))
-    name = Field(input_processor=MapCompose(str.strip))
-    credit = Field()
-    teacher = Field()
+    course_type = Field(output_processor=TakeFirst())
+    cid = Field(output_processor=TakeFirst(), input_processor=MapCompose(str.strip))
+    name = Field(output_processor=TakeFirst(), input_processor=MapCompose(str.strip))
+    credit = Field(output_processor=TakeFirst())
+    teacher = Field(output_processor=TakeFirst())
     # duration = Field()
-    max_member = Field()
-    min_member = Field()
+    max_member = Field(output_processor=TakeFirst())
+    grade = Field(output_processor=TakeFirst())
+    min_member = Field(output_processor=TakeFirst())
     odd_week = Field()# serializer=CourseTime)
     even_week = Field()# serializer=CourseTime)
     # week = Field()
-    bsid = Field()
-    remark = Field(input_processor=MapCompose(str.strip))
+    bsid = Field(output_processor=TakeFirst())
+    remark = Field(output_processor=TakeFirst(), input_processor=MapCompose(str.strip))
     place = Field()
     # time = Field()
 

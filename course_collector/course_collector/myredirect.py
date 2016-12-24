@@ -94,7 +94,7 @@ class MyRedirectMiddleware(RedirectMiddleware):
         if 'message=' in request.url:
             logger.debug(unquote(request.url).split('message=')[1])
             # set_trace()
-            logger.debug(request.meta['item']['cid'][0] +' rejected.')
+            logger.debug(request.meta['item']['cid'] +' rejected.')
             # self.rejected.update({request.meta['item']['cid'][0]:self._recover_post(request)})
             return self._recover_post(request)
 
