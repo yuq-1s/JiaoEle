@@ -14,6 +14,7 @@ from threading import Thread
 from pages import InitPage, GrabPage, LessonPage
 from utils import MessageError, SessionOutdated, EmptyCourse
 from jaccount import login
+from abc import ABCMeta, abstractmethod
 
 from concurrent.futures import ThreadPoolExecutor
 import itertools
@@ -51,73 +52,15 @@ class Course(object):
         self.name = tds[0].text.strip()
         self.cid = re.search('[A-Z]{2}\d{3}', tds[1].text).group(0)
 
-class Cracker(object):
+class Cracker(metaclass=ABCMeta):
     def __init__(self, user, passwd):
         super().__init__()
         self.user = user
         self.passwd = passwd
-        # self.view_param = param
         logger.debug('Login succeeded.')
         self.sess = login(self.user, self.passwd)
         logger.debug('Login succeeded.')
         self.refresh()
-
-    def _get_failed_courses(self):
-        soup = BeautifulSoup(self.qxresp.text, 'html.parser')
-
-        failed_trs = [tag.parent.parent for tag in \
-            soup.find_all('font', {'color': 'Red'}) \
-            if tag.parent.parent.a and tag.text == '否']
-        return [Course(tr) for tr in failed_trs]
-
-
-    def refresh(self):
-        logger.debug('Refreshing...')
-        self.initpage = InitPage(self, self.sess.get(InitPage.url).text)
-        # self.mainpage = MainPage(self, self.initpage.proceed().text)
-        self.qxresp = self.initpage.proceed()
-        # self.bsids = re.findall('bsid=(\d{6})', self.qxresp.text)
-        self.courses = self._get_failed_courses()
-        self.names = [c.name for c in self.courses]
-        self.cid2name = {c.cid: c.name for c in self.courses}
-        logger.debug('Refresh complete.')
-
-    def _crack(self, course):
-        param = course.params
-        grabpage = GrabPage(self, self.qxresp.text, param)
-        lesson_resp = grabpage.proceed()
-        try:
-            lessonpage = LessonPage(self, lesson_resp.text, 
-                    lesson_resp.url, course)
-        except EmptyCourse as e:
-            logger.error('Encounter empty course: %s' % e)
-            return
-
-        logger.info('Grabbing course %s...' % course.name)
-
-        while course.name in self.names: # Course not got
-            try:
-                lessonpage.proceed()
-                submit_response = grabpage.submit()
-                assert 'successful.aspx' in submit_response.url, 'Submit failed'
-                break
-            except ConnectionError as e:
-                sleep(5)
-                logger.error(e)
-            except AssertionError as e:
-                if str(e) == 'Submit failed':
-                    logger.error('Redirected to %s after course available'%resp.url)
-                    logger.error('Why cannot submit?')
-            else:
-                self.refresh()
-
-        logger.info('Successfully got %s.' % course.name)
-
-    def crack(self):
-        with ThreadPoolExecutor(max_workers=len(self.courses)) as executor:
-            executor.map(self._crack, self.courses)
-
-        # self._crack(self.courses[2])
 
     def post(self, *args, **kw):
         resp = self.sess.post(*args, **kw)
@@ -142,20 +85,9 @@ class Cracker(object):
 
 
     def handle_message(self, resp):
-        def _get_cid(resp):
-            for h in resp.history:
-                try:
-                    return parse_qs(urlparse(h.url).query)['kcdm'][0]
-                except KeyError:
-                    pass
-            return ''
-
         try:
             message = unquote(resp.url.split('message=')[1])
-            # cid = parse_qs(resp.history[1].url).get('kcdm', '')
-            # logger.debug('history:{}'.format([r.url for r in resp.history]))
-            logger.debug('%s: %s' % \
-                    (self.cid2name.get(_get_cid(resp),''), message))
+            logger.debug(message)
             if '刷新' in message:
                 sleep(1)
             elif message == '已提交，请等待教务处的微调结果！':
@@ -164,43 +96,160 @@ class Cracker(object):
         except IndexError:
             pass
 
+    @abstractmethod
+    def refresh(self):
+        logger.error('This method is a stub. Please write it in the children.')
+        sys.exit(-1)
+
+class Master(Cracker):
+    # def __init__(self, user, passwd):
+    #     super().__init__(user, passwd)
+    #     self.user = user
+    #     self.passwd = passwd
+    #     # self.view_param = param
+    #     logger.debug('Login succeeded.')
+    #     self.sess = login(self.user, self.passwd)
+    #     logger.debug('Login succeeded.')
+    #     self.refresh()
+
+    def _get_failed_courses(self):
+        soup = BeautifulSoup(self.qxresp.text, 'html.parser')
+
+        failed_trs = [tag.parent.parent for tag in \
+            soup.find_all('font', {'color': 'Red'}) \
+            if tag.parent.parent.a and tag.text == '否']
+        return [Course(tr) for tr in failed_trs]
+
+
+    def refresh(self):
+        logger.debug('Refreshing...')
+        self.initpage = InitPage(self, self.sess.get(InitPage.url).text)
+        self.qxresp = self.initpage.proceed()
+        self.courses = self._get_failed_courses()
+        self.names = [c.name for c in self.courses]
+        self.cid2name = {c.cid: c.name for c in self.courses}
+        logger.debug('Refresh complete.')
+
+    def run(self):
+        for course in self.courses:
+            Worker(self, course).start()
+
+class Worker(Cracker, Thread):
+    def __init__(self, master, course):
+        self.master = master
+        self.course = course
+        super().__init__(master.user, master.passwd)
+
+    def refresh(self):
+        logger.debug('%s refreshing...'% self.course.name)
+        self.initpage = InitPage(self, self.sess.get(InitPage.url).text)
+        self.qxresp = self.initpage.proceed()
+        logger.debug('Refresh complete.')
+
+    def handle_message(self, resp):
+        logger.debug(self.course.name)
+        super().handle_message(resp)
+
+    def run(self):
+        param = self.course.params
+        grabpage = GrabPage(self, self.qxresp.text, param)
+        lesson_resp = grabpage.proceed()
+        try:
+            lessonpage = LessonPage(self, lesson_resp.text, 
+                    lesson_resp.url, self.course)
+        except EmptyCourse as e:
+            logger.error('Encounter empty course: %s' % e)
+            return
+
+        logger.info('Grabbing course %s...' % self.course.name)
+
+        # FIXME: This condition may not work when multi-threading
+        while self.course.name in self.master.names: # Course not got
+            try:
+                lessonpage.proceed()
+                submit_response = grabpage.submit()
+                assert 'successful.aspx' in submit_response.url, 'Submit failed'
+                break
+            except ConnectionError as e:
+                sleep(5)
+                logger.error(e)
+            except AssertionError as e:
+                if str(e) == 'Submit failed':
+                    logger.error('Redirected to %s after course available'%resp.url)
+                    logger.error('Why cannot submit?')
+            else:
+                self.master.refresh()
+
+        logger.info('Successfully got %s.' % self.course.name)
+
 
 class Runner(Thread):
-    def __init__(self, cracker):
+    def __init__(self, cracker, course):
         super().__init__()
         # self.grabpage = grabpage
         # self.lessonpage = lessonpage
         self.cracker = cracker
+        self.course = course
 
     def run(self):
-        logger.info('Grabbing course %s...'%self.param['myradiogroup'])
-        for cnt in itertools.count():
+        param = self.course.params
+        grabpage = GrabPage(self.cracker, self.cracker.qxresp.text, param)
+        lesson_resp = grabpage.proceed()
+        try:
+            lessonpage = LessonPage(self.cracker, lesson_resp.text, 
+                    lesson_resp.url, self.course)
+        except EmptyCourse as e:
+            logger.error('Encounter empty course: %s' % e)
+            return
+
+        logger.info('Grabbing course %s...' % self.course.name)
+
+        while self.course.name in self.cracker.names: # Course not got
             try:
-                if 'message=' not in cracker.lessonpage.proceed().url:
-                    # if '/secondRoundFP.aspx' in resp.url:
-                    resp = cracker.grabpage.submit()
-                    if not 'successful.aspx' in resp.url:
-                        logger.error('Redirected to %s after course available'%resp.url)
-                        # respi = self.cracker.initpage.proceed()
-                        # respm = self.cracker.mainpage.proceed()
-                        # respa = self.cracker.grabpage.proceed()
-                        logger.error('Why cannot submit?')
-                        # raise ResetException
-                    else:
-                        logger.error('Successfully got %s lesson.'%
-                                cracker.lessonpage.url)
-                        return
+                lessonpage.proceed()
+                submit_response = grabpage.submit()
+                assert 'successful.aspx' in submit_response.url, 'Submit failed'
+                break
             except ConnectionError as e:
                 sleep(5)
                 logger.error(e)
-            logger.error('Resetting the %d times'%cnt)
+            except AssertionError as e:
+                if str(e) == 'Submit failed':
+                    logger.error('Redirected to %s after course available'%resp.url)
+                    logger.error('Why cannot submit?')
+            else:
+                self.cracker.refresh()
+
+        logger.info('Successfully got %s.' % self.course.name)
+
+#         logger.info('Grabbing course %s...'%self.param['myradiogroup'])
+#         for cnt in itertools.count():
+#             try:
+#                 if 'message=' not in cracker.lessonpage.proceed().url:
+#                     # if '/secondRoundFP.aspx' in resp.url:
+#                     resp = cracker.grabpage.submit()
+#                     if not 'successful.aspx' in resp.url:
+#                         logger.error('Redirected to %s after course available'%resp.url)
+#                         # respi = self.cracker.initpage.proceed()
+#                         # respm = self.cracker.mainpage.proceed()
+#                         # respa = self.cracker.grabpage.proceed()
+#                         logger.error('Why cannot submit?')
+#                         # raise ResetException
+#                     else:
+#                         logger.error('Successfully got %s lesson.'%
+#                                 cracker.lessonpage.url)
+#                         return
+#             except ConnectionError as e:
+#                 sleep(5)
+#                 logger.error(e)
+#             logger.error('Resetting the %d times'%cnt)
 
 
-        for param in params:
-            try:
-                Runner(self.grabpage, self.lessonpage, self).run()
-            except EmptyCourse as e:
-                logger.error('Empty course: %s'%e)
+#         for param in params:
+#             try:
+#                 Runner(self.grabpage, self.lessonpage, self).run()
+#             except EmptyCourse as e:
+#                 logger.error('Empty course: %s'%e)
 
 # class LessonPage(BasePage):
 #     url = ELECT_URL+
@@ -214,5 +263,58 @@ if __name__ == '__main__':
     # sess = login('zxdewr', 'p1ptess')
     # init(sess)
 
-    Cracker(sys.argv[1], sys.argv[2]).crack()
+    Master(sys.argv[1], sys.argv[2]).run()
 
+    # def _get_failed_courses(self):
+    #     soup = BeautifulSoup(self.qxresp.text, 'html.parser')
+
+    #     failed_trs = [tag.parent.parent for tag in \
+    #         soup.find_all('font', {'color': 'Red'}) \
+    #         if tag.parent.parent.a and tag.text == '否']
+    #     return [Course(tr) for tr in failed_trs]
+
+
+    # def refresh(self):
+    #     logger.debug('Refreshing...')
+    #     self.initpage = InitPage(self, self.sess.get(InitPage.url).text)
+    #     # self.mainpage = MainPage(self, self.initpage.proceed().text)
+    #     self.qxresp = self.initpage.proceed()
+    #     # self.bsids = re.findall('bsid=(\d{6})', self.qxresp.text)
+    #     self.courses = self._get_failed_courses()
+    #     self.names = [c.name for c in self.courses]
+    #     self.cid2name = {c.cid: c.name for c in self.courses}
+    #     logger.debug('Refresh complete.')
+
+    # def _crack(self, course):
+    #     param = course.params
+    #     grabpage = GrabPage(self, self.qxresp.text, param)
+    #     lesson_resp = grabpage.proceed()
+    #     try:
+    #         lessonpage = LessonPage(self, lesson_resp.text, 
+    #                 lesson_resp.url, course)
+    #     except EmptyCourse as e:
+    #         logger.error('Encounter empty course: %s' % e)
+    #         return
+
+    #     logger.info('Grabbing course %s...' % course.name)
+
+    #     while course.name in self.names: # Course not got
+    #         try:
+    #             lessonpage.proceed()
+    #             submit_response = grabpage.submit()
+    #             assert 'successful.aspx' in submit_response.url, 'Submit failed'
+    #             break
+    #         except ConnectionError as e:
+    #             sleep(5)
+    #             logger.error(e)
+    #         except AssertionError as e:
+    #             if str(e) == 'Submit failed':
+    #                 logger.error('Redirected to %s after course available'%resp.url)
+    #                 logger.error('Why cannot submit?')
+    #         else:
+    #             self.refresh()
+
+    #     logger.info('Successfully got %s.' % course.name)
+
+        # with ThreadPoolExecutor(max_workers=len(self.courses)) as executor:
+        #     executor.map(self._crack, self.courses)
