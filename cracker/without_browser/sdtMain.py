@@ -7,7 +7,7 @@ from logging import getLogger, StreamHandler, Formatter, DEBUG
 from itertools import count
 from functools import wraps
 from sys import stdout
-from urllib.parse import urlencode, urlparse, unquote
+from urllib.parse import urlencode, urlparse, unquote, parse_qs
 from lxml import etree
 from time import sleep
 from threading import Thread
@@ -43,12 +43,13 @@ logger.addHandler(ch)
 
 class Course(object):
     def __init__(self, tr):
-        # tds = tr.find_all('td')
+        tds = tr.find_all('td')
         self.params = {'__EVENTTARGET': tr.a.attrs['href'].split("'")[1]}
-        self.teacher = tr.find_all('td')[3].text.strip()
-        self.time = tr.find_all('td')[4].text.strip()
-        self.remark = tr.find_all('td')[5].text.strip()
-        self.name = tr.find_all('td')[0].text.strip()
+        self.teacher = tds[3].text.strip()
+        self.time = tds[4].text.strip()
+        self.remark = tds[5].text.strip()
+        self.name = tds[0].text.strip()
+        self.cid = re.search('[A-Z]{2}\d{3}', tds[1].text).group(0)
 
 class Cracker(object):
     def __init__(self, user, passwd):
@@ -78,6 +79,7 @@ class Cracker(object):
         # self.bsids = re.findall('bsid=(\d{6})', self.qxresp.text)
         self.courses = self._get_failed_courses()
         self.names = [c.name for c in self.courses]
+        self.cid2name = {c.cid: c.name for c in self.courses}
         logger.debug('Refresh complete.')
 
     def _crack(self, course):
@@ -114,6 +116,7 @@ class Cracker(object):
     def crack(self):
         with ThreadPoolExecutor(max_workers=len(self.courses)) as executor:
             executor.map(self._crack, self.courses)
+
         # self._crack(self.courses[2])
 
     def post(self, *args, **kw):
@@ -124,8 +127,8 @@ class Cracker(object):
                 self.handle_outdate(resp)
                 self.handle_message(resp)
             except (SessionOutdated, MessageError, requests.exceptions.HTTPError):
-                resp = self.sess.post(*args, **kw)
                 logger.debug('The %d times post failed' % cnt)
+                resp = self.sess.post(*args, **kw)
             else:
                 return resp
 
@@ -139,9 +142,20 @@ class Cracker(object):
 
 
     def handle_message(self, resp):
+        def _get_cid(resp):
+            for h in resp.history:
+                try:
+                    return parse_qs(urlparse(h.url).query)['kcdm'][0]
+                except KeyError:
+                    pass
+            return ''
+
         try:
             message = unquote(resp.url.split('message=')[1])
-            logger.debug(message)
+            # cid = parse_qs(resp.history[1].url).get('kcdm', '')
+            # logger.debug('history:{}'.format([r.url for r in resp.history]))
+            logger.debug('%s: %s' % \
+                    (self.cid2name.get(_get_cid(resp),''), message))
             if '刷新' in message:
                 sleep(1)
             elif message == '已提交，请等待教务处的微调结果！':
