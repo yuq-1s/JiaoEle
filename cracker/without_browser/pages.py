@@ -15,8 +15,7 @@ class BasePage(object):
 
     # def update_sess(self, sess):
     #     self.craker.update_sess()
-
-    def proceed(self):
+def proceed(self):
         # self.craker.post(self.url, data=self.param)
         # resp = self.craker.post(self.url, data=self.param)
         # self.craker.handle_outdate(resp)
@@ -24,18 +23,18 @@ class BasePage(object):
         return self.craker.post(self.url, data=self.param)
 
 class InitPage(BasePage):
-    url = ELECT_URL+'electwarning.aspx?xklc=1'
+    url = ELECT_URL+'electwarning.aspx?xklc=2'
     def __init__(self, craker, text):
         self.param = {'CheckBox1': 'on', 'btnContinue': '继续'}
         super().__init__(craker, text)
         # self.url = ELECT_URL+'electwarning.aspx?xklc=1'
 
-class MainPage(BasePage):
-    def __init__(self, craker, text):
-        self.url = ELECT_URL+'speltyRequiredCourse.aspx'
-        self.param = {'SpeltyRequiredCourse1$btnQxsy': '抢选首页'}
-        super().__init__(craker, text)
-    # param.update(asp_params(self.sess.post(url, data=init_param).text))
+# class MainPage(BasePage):
+#     def __init__(self, craker, text):
+#         self.url = ELECT_URL+'speltyRequiredCourse.aspx'
+#         self.param = {'SpeltyRequiredCourse1$btnQxsy': '抢选首页'}
+#         super().__init__(craker, text)
+#     # param.update(asp_params(self.sess.post(url, data=init_param).text))
 
 
 
