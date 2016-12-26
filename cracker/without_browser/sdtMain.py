@@ -15,6 +15,7 @@ from pages import InitPage, GrabPage, LessonPage
 from utils import MessageError, SessionOutdated, EmptyCourse
 from jaccount import login
 
+from concurrent.futures import ThreadPoolExecutor
 import itertools
 import re
 import sys
@@ -40,6 +41,14 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
+class Course(object):
+    def __init__(self, tr):
+        # tds = tr.find_all('td')
+        self.params = {'__EVENTTARGET': tr.a.attrs['href'].split("'")[1]}
+        self.teacher = tr.find_all('td')[3].text.strip()
+        self.time = tr.find_all('td')[4].text.strip()
+        self.remark = tr.find_all('td')[5].text.strip()
+        self.name = tr.find_all('td')[0].text.strip()
 
 class Cracker(object):
     def __init__(self, user, passwd):
@@ -50,27 +59,38 @@ class Cracker(object):
         self.sess = login(self.user, self.passwd)
         self.refresh()
 
+    def _get_failed_courses(self):
+        soup = BeautifulSoup(self.qxresp.text, 'html.parser')
+
+        failed_trs = [tag.parent.parent for tag in \
+            soup.find_all('font', {'color': 'Red'}) \
+            if tag.parent.parent.a and tag.text == '否']
+        return [Course(tr) for tr in failed_trs]
+
 
     def refresh(self):
         logger.debug('Refreshing...')
         self.initpage = InitPage(self, self.sess.get(InitPage.url).text)
         # self.mainpage = MainPage(self, self.initpage.proceed().text)
         self.qxresp = self.initpage.proceed()
-        self.bsids = re.findall('bsid=(\d{6})', qxresp.text)
-        self.params = [{'__EVENTTARGET': tag.parent.parent.a.attrs['href'].split("'")[1]} 
-                for tag in BeautifulSoup(qxresp.text,'html.parser').find_all('font', {'color': 'Red'}) \
-                        if tag.parent.parent.a and tag.text == '否']
+        # self.bsids = re.findall('bsid=(\d{6})', self.qxresp.text)
+        self.courses = self._get_failed_courses()
+        self.names = [c.name for c in self.courses]
 
-    def _crack(self, param):
+    def _crack(self, course):
+        param = course.params
         grabpage = GrabPage(self, self.qxresp.text, param)
         lesson_resp = grabpage.proceed()
-        lessonpage = LessonPage(self, lesson_resp.text, 
-                lesson_resp.url, self.bsids)
-        bsid = lessonpage.param['myradiogroup']
+        try:
+            lessonpage = LessonPage(self, lesson_resp.text, 
+                    lesson_resp.url, course)
+        except EmptyCourse as e:
+            logger.error('Encounter empty course: %s' % e)
+            return
 
-        logger.info('Grabbing course %s...' % bsid)
+        logger.info('Grabbing course %s...' % course.name)
 
-        while bsid in self.bsids: # Course not got
+        while course.name in self.names: # Course not got
             try:
                 lessonpage.proceed()
                 submit_response = grabpage.submit()
@@ -86,19 +106,21 @@ class Cracker(object):
             else:
                 self.refresh()
 
-        logger.info('Successfully got %s.' % bsid)
+        logger.info('Successfully got %s.' % course.name)
 
     def crack(self):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-            exerutor.map(self._crack, params)
+        # with ThreadPoolExecutor(max_workers=2) as executor:
+        #     executor.map(self._crack, self.params)
+        self._crack(self.courses[2])
 
     def post(self, *args, **kw):
         resp = self.sess.post(*args, **kw)
         for cnt in itertools.count():
             try:
+                resp.raise_for_status()
                 self.handle_outdate(resp)
                 self.handle_message(resp)
-            except (SessionOutdated, MessageError):
+            except (SessionOutdated, MessageError, requests.exceptions.HTTPError):
                 resp = self.sess.post(*args, **kw)
                 logger.debug('The %d times post failed' % cnt)
             else:
