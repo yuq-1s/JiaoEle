@@ -7,7 +7,7 @@ from pathlib import Path
 from logging import getLogger
 from pdb import set_trace
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from functools import wraps
 from jaccount import login
 from time import sleep
@@ -87,56 +87,67 @@ class BasePage(object):
                 #     self.driver.get(ELECT_URL+'speltyCommonCourse.aspx')
 
 class InitPage(BasePage):
-    recover_url = ELECT_URL+'electwarning.aspx?xklc=1'
+    recover_url = ELECT_URL+'electwarning.aspx?xklc=2'
 
     @BasePage.recover
     def init(self):
         self.driver.find_element_by_id('CheckBox1').click()
         self.driver.find_element_by_id('btnContinue').click()
-        sleep(0.1)
-        assert 'speltyR' in self.driver.current_url, 'init failed'
+        # assert 'secondRoundFP.aspx' in self.driver.current_url, 'init failed'
+        # # assert 'speltyR' in self.driver.current_url, 'init failed'
 
 class TongshiPage(BasePage):
     recover_url = ELECT_URL+'speltyCommonCourse.aspx'
+    def __init__(self, driver, course_type, cid):
+        self.course_type = course_type
+        self.cid = cid
+        super().__init__(driver)
 
     @BasePage.recover
-    def get_courses_list(self, course_type):
-        ct = ['rw', 'sk', 'zk', 'sx'].index(course_type)+2
+    def get_courses_list(self):
+        ct = ['rw', 'sk', 'zk', 'sx'].index(self.course_type)+2
         self.driver.find_element_by_xpath('//*[@id="gridGModule_ctl0%s_radioButton"]'%ct).click()
-        sleep(0.1)
-        assert '/speltyCommonCourse' in self.driver.current_url, 'get course list failed.'
+        # assert '/speltyCommonCourse' in self.driver.current_url, 'get course list failed.'
 
 
-    def get_name_by_cid(self, cid):
-        return self.driver.find_element_by_xpath('//td[contains(text(),"%s")]/../td[1]'%cid).text
+    def get_name_by_cid(self):
+        return self.driver.find_element_by_xpath('//td[contains(text(),"%s")]/../td[1]'%self.cid).text
 
-    def get_radio_by_cid(self, cid):
-        return self.driver.find_element_by_xpath('//input[@value="%s"]'%cid)
+    def get_radio_by_cid(self):
+        return self.driver.find_element_by_xpath('//input[@value="%s"]'%self.cid)
 
-    def view_lesson_by_cid(self, cid):
-        self.get_radio_by_cid(cid).click()
+    def view_lesson_by_cid(self):
+        self.get_radio_by_cid().click()
         self.driver.find_element_by_id('lessonArrange').click()
-        sleep(0.1)
-        assert '/viewLessonArrange' in self.driver.current_url, 'view lesson failed'
+        # assert '/viewLessonArrange' in self.driver.current_url, 'view lesson failed'
 
     def submit(self):
         self.driver.find_element_by_id('btnSubmit').click()
 
 class LessonPage(BasePage): 
-    def get_teacher_by_bsid(self, bsid):
+    def __init__(self, driver, bsid):
+        self.bsid = bsid
+        super().__init__(driver)
+
+    def get_teacher_by_bsid(self):
         return self.driver.find_element_by_xpath('//input[value="%s"]/../../../td[1]')
 
-    def select_by_bsid(self, bsid):
-        self.driver.find_element_by_xpath('//input[@value="%s"]'%bsid).click()
+    def select_by_bsid(self):
+        self.driver.find_element_by_xpath('//input[@value="%s"]'%self.bsid).click()
         self.driver.find_element_by_id('LessonTime1_btnChoose').click()
         # assert 'speltyCommonCourse' in self.driver.current_url, 'select failed.'
 
+class QiangxuanPage(BasePage):
+    def proceed(self):
+        self.driver.find_element_by_id('btnTxk').click()
+
 class MessagePage(BasePage):
     def back(self):
-        try:
-            self.driver.find_element_by_id('btnContinue').click()
-        except NoSuchElementException:
-            self.driver.find_element_by_id('Button1').click()
+        self.driver.back()
+        # try:
+        #     self.driver.find_element_by_id('btnContinue').click()
+        # except NoSuchElementException:
+        #     self.driver.find_element_by_id('Button1').click()
 
         # self.driver.back()
 
@@ -303,10 +314,38 @@ class Main(cmd.Cmd):
 
         for c in self.cookies:
             self.driver.add_cookie(c)
-        print('a')
+
+    def proceed(self):
+        try:
+            if '/viewLessonArrange' in self.driver.current_url:
+                self.lessonpage.select_by_bsid()
+                if not 'message=' in self.driver.current_url:
+                    sleep(1.5)
+                    self.tongshipage.submit()
+                    logger.info('Succeeded.')
+            elif '/speltyCommonCourse' in self.driver.current_url:
+                sleep(1)
+                self.tongshipage.get_courses_list()
+                sleep(1)
+                self.tongshipage.view_lesson_by_cid()
+                sleep(1)
+            elif 'message=' in self.driver.current_url:
+                self.messagepage.handle_message()
+            elif '/secondRoundFP.aspx' in self.driver.current_url:
+                sleep(2)
+                self.qxpage.proceed()
+            else:
+                self.initpage.init()
+                sleep(1)
+
+        except NoSuchElementException:
+            pass
+            # set_trace()
+        except StaleElementReferenceException:
+            pass
+
 
     def do_do_qiang(self, arg):
-        print('a')
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(1)
         self.driver.get(EDU_URL)
@@ -314,10 +353,11 @@ class Main(cmd.Cmd):
 
         try:
             ct, cid, bsid = re.search('([a-z]{2})\s+([A-Z]{2}\d{3})\s+(\d{6})', arg).groups()
-            initpage = InitPage(self.driver)
-            tongshipage = TongshiPage(self.driver)
-            lessonpage = LessonPage(self.driver)
-            messagepage = MessagePage(self.driver)
+            self.initpage = InitPage(self.driver)
+            self.tongshipage = TongshiPage(self.driver, ct, cid)
+            self.lessonpage = LessonPage(self.driver, bsid)
+            self.messagepage = MessagePage(self.driver)
+            self.qxpage = QiangxuanPage(self.driver)
         except Exception as e:
             traceback.print_exc(file=sys.stdout)
             logging.error(e)
@@ -325,22 +365,23 @@ class Main(cmd.Cmd):
 
         while True:
             try:
-                initpage.init()
-                tongshipage.get_courses_list(ct)
-                # sleep(1)
-                while True:
-                    try:
-                        tongshipage.view_lesson_by_cid(cid)
-                        lessonpage.select_by_bsid(bsid)
-                        messagepage.handle_message()
-                    except (NoSuchElementException, IndexError):
-                        assert '/speltyCommonCourse' in self.driver.current_url
-                        sleep(1)
-                        tongshipage.submit()
-                        set_trace()
-                        # self.driver.get(EDU_URL+'login.aspx')
-                        logging.info('Success')
-                        return
+                self.proceed()
+                # initpage.init()
+                # tongshipage.get_courses_list(ct)
+                # # sleep(1)
+                # while True:
+                #     try:
+                #         tongshipage.view_lesson_by_cid(cid)
+                #         lessonpage.select_by_bsid(bsid)
+                #         messagepage.handle_message()
+                #     except (NoSuchElementException, IndexError):
+                #         assert '/speltyCommonCourse' in self.driver.current_url
+                #         sleep(1)
+                #         tongshipage.submit()
+                #         set_trace()
+                #         # self.driver.get(EDU_URL+'login.aspx')
+                #         logging.info('Success')
+                #         return
 
             except AssertionError as e:
                 traceback.print_exc(file=sys.stdout)
@@ -371,8 +412,9 @@ class Main(cmd.Cmd):
         ''' Example: qiang rw TH901 382102
             for 抢人文课号为TH901, 老师代码为382102的
         '''
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            print(executor.submit(self.do_do_qiang, arg).result)
+        self.do_do_qiang(arg)
+        # with ThreadPoolExecutor(max_workers=2) as executor:
+        #     print(executor.submit(self.do_do_qiang, arg).result)
 
 # TODO: Make Spiders share the cookie middleware.
 # class Main(cmd.Cmd):
