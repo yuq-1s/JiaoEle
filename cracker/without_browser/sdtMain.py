@@ -1,5 +1,12 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+# TODO:
+# 1. store cookies
+# 2. auto check if course full
+# 3. select by {property name teacher time}.
+# 4. input json file
+
 from pdb import set_trace
 from bs4 import BeautifulSoup
 import requests
@@ -77,9 +84,14 @@ class Cracker(metaclass=ABCMeta):
                 resp.raise_for_status()
                 self.handle_outdate(resp)
                 self.handle_message(resp)
-            except (SessionOutdated, MessageError, requests.exceptions.HTTPError):
-                logger.debug('The %d times post failed' % cnt)
+            except (SessionOutdated, MessageError) as e:
                 resp = self.sess.post(*args, **kw)
+                logger.debug('The %d times post failed' % cnt)
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 500:
+                    raise e
+                resp = self.sess.post(*args, **kw)
+                logger.debug('The %d times post failed' % cnt)
             else:
                 return resp
 
@@ -100,7 +112,7 @@ class Cracker(metaclass=ABCMeta):
                 sleep(1)
             elif message == '已提交，请等待教务处的微调结果！':
                 return
-            raise MessageError
+            raise MessageError(message)
         except IndexError:
             pass
 
