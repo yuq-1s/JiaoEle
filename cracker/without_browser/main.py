@@ -347,6 +347,13 @@ class Main(cmd.Cmd):
     def do_refresh(self, _):
         self.refresh_main_sess()
 
+    def do_is_grabbing(self, _):
+        print(not self.grabber.canceled)
+
+    def do_is_replacing(self, _):
+        print(not self.replacer.canceled)
+
+
 if __name__ == '__main__':
     m1 = Main()
     quit = False
