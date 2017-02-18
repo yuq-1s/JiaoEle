@@ -30,6 +30,9 @@ logger = get_logger(__name__)
 # TODO: Print course type
 # TODO: Notify user newly availble courses in real time.
 # TODO: Reset after unknown exception.
+# TODO: Replace pages directory with a pickle.
+# TODO: Write setup.py
+# TODO: Offline mode.
 # FIXME: This version assumes all courses are submited and nothing conflicts.
 class Main(cmd.Cmd):
     CURRENT_PATH = 'data/current.json'
