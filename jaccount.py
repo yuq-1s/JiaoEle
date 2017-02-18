@@ -82,11 +82,5 @@ if __name__ == '__main__':
 
 # def check_session(sess):
 #     check_list = ['ASP.NET_SessionId', 'JASiteCookie', 'mail_test_cookie']
-#     set_trace()
 #     resp_check = sess.get('http://electsys.sjtu.edu.cn/edu/student/sdtinfocheck.aspx',
 #             cookies = {s: sess.cookies[s] for s in check_list})
-#     set_trace()
-# def prepare_form(sess):
-#     form_url = 'http://electsys.sjtu.edu.cn/edu/newsboard/newsinside.aspx'
-#     form_soup = BeautifulSoup(sess.get(form_url).text, 'html.parser')
-#     return {inp['name']: inp['value'] for inp in form_soup.find_all('input')}

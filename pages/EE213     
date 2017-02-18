@@ -1,0 +1,188 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+	<HEAD>
+		<title>viewLesson</title>
+		<meta name="GENERATOR" Content="Microsoft Visual Studio 7.0">
+		<meta name="CODE_LANGUAGE" Content="C#">
+		<meta name="vs_defaultClientScript" content="JavaScript">
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+		<LINK href="../include/main.css" type="text/css" rel="stylesheet">
+		<LINK href="../include/style.css" type="text/css" rel="stylesheet">
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+	</HEAD>
+	<body MS_POSITIONING="GridLayout" leftmargin="0" topmargin="0">
+		<form name="viewLesson" method="post" action="viewLessonArrange.aspx?kcdm=EE213+++++&amp;xklx=%u9009%u4fee&amp;redirectForm=outSpeltyEp.aspx&amp;yxdm=03000&amp;nj=2015&amp;kcmk=-1&amp;txkmk=-1" id="viewLesson">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJMzg0ODEwOTgwD2QWAgIBD2QWAgIBD2QWAgIBDzwrAAsBAA8WCB4IRGF0YUtleXMWCgUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIAUKRUUyMTMgICAgIB4LXyFJdGVtQ291bnQCCh4JUGFnZUNvdW50AgEeFV8hRGF0YVNvdXJjZUl0ZW1Db3VudAIKZBYCZg9kFhQCAQ9kFiZmD2QWAgIBDw8WAh4EVGV4dAUzPGlucHV0IHR5cGU9cmFkaW8gbmFtZT0nbXlyYWRpb2dyb3VwJyB2YWx1ZT0zODE3Nzg+ZGQCAQ8PFgIfBAUGMzgxNzc4ZGQCAg8PFgIfBAUKRUUyMTMgICAgIGRkAgMPDxYCHwQFCeaWueWQkeW/oGRkAgQPDxYCHwQFGuaVmeaOiCAgICAgICAgICAgICAgICAgICAgZGQCBQ8PFgIfBAU1MDAxLSgyMDE2LTIwMTctMilFRTIxMyjmlZnlrabnj60pICAgICAgICAgICAgICAgICAgICBkZAIGDw8WAh8EBQI2NGRkAgcPDxYCHwQFAjYwZGQCCA8PFgIfBAUCMTBkZAIJDw8WAh8EBQI2MGRkAgoPDxYCHwQFAjYwZGQCCw8PFgIfBAWWAigxLTE25ZGoKTxicj7ooYzor77lronmjpLkuLrnrKwxLTE25ZGoLOWFtuS4rTo8YnI+CuaYn+acn+S4gCAg56ysOeiKgi0t56ysMTDoioI8YnI+CuS4remZojExMCgxLTE25ZGoKSDmlrnlkJHlv6AoMS0xNuWRqCk8YnI+CuS4remZojExMCgxLTE25ZGoKSDpgrXnvqQoMS0xNuWRqCk8YnI+CuaYn+acn+S4iSAg56ysMeiKgi0t56ysMuiKgjxicj4K5Lit6ZmiMTEwKDEtMTblkagpIOaWueWQkeW/oCgxLTE25ZGoKTxicj4K5Lit6ZmiMTEwKDEtMTblkagpIOmCtee+pCgxLTE25ZGoKTxicj4KZGQCDA8PFgIfBAWIAuWPjOivreaOiOivviAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRkAg0PDxYCHwQFCeS6uuaVsOa7oWRkAg4PDxYCHwQFATFkZAIPDw8WAh8EBQExZGQCEA8PFgIfBAUJMjAxNi0yMDE3ZGQCEQ8PFgIfBAUBMmRkAhIPDxYCHwQFCjEwMjQ4OTM0NTFkZAICD2QWJmYPZBYCAgEPDxYCHwQFMzxpbnB1dCB0eXBlPXJhZGlvIG5hbWU9J215cmFkaW9ncm91cCcgdmFsdWU9MzgxNzc5PmRkAgEPDxYCHwQFBjM4MTc3OWRkAgIPDxYCHwQFCkVFMjEzICAgICBkZAIDDw8WAh8EBQnmrrPlm73ljY5kZAIEDw8WAh8EBRvlia/mlZnmjoggICAgICAgICAgICAgICAgICBkZAIFDw8WAh8EBTUwMDItKDIwMTYtMjAxNy0yKUVFMjEzKOaVmeWtpuePrSkgICAgICAgICAgICAgICAgICAgIGRkAgYPDxYCHwQFAjY0ZGQCBw8PFgIfBAUCNjBkZAIIDw8WAh8EBQIxMGRkAgkPDxYCHwQFAjYxZGQCCg8PFgIfBAUCNjBkZAILDw8WAh8EBZYCKDEtMTblkagpPGJyPuihjOivvuWuieaOkuS4uuesrDEtMTblkags5YW25LitOjxicj4K5pif5pyf5LiAICDnrKw56IqCLS3nrKwxMOiKgjxicj4K5Lit6ZmiMjA5KDEtMTblkagpIOmCtee+pCgxLTE25ZGoKTxicj4K5Lit6ZmiMjA5KDEtMTblkagpIOaus+WbveWNjigxLTE25ZGoKTxicj4K5pif5pyf5LiJICDnrKwx6IqCLS3nrKwy6IqCPGJyPgrkuK3pmaIyMDkoMS0xNuWRqCkg6YK1576kKDEtMTblkagpPGJyPgrkuK3pmaIyMDkoMS0xNuWRqCkg5q6z5Zu9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cmFkaW8gbmFtZT0nbXlyYWRpb2dyb3VwJyB2YWx1ZT0zODE3ODc+ZGQCAQ8PFgIfBAUGMzgxNzg3ZGQCAg8PFgIfBAUKRUUyMTMgICAgIGRkAgMPDxYCHwQFCee9l+WIqeaWh2RkAgQPDxYCHwQFG+WJr+aVmeaOiCAgICAgICAgICAgICAgICAgIGRkAgUPDxYCHwQFNTAwOS0oMjAxNi0yMDE3LTIpRUUyMTMo5pWZ5a2m54+tKSAgICAgICAgICAgICAgICAgICAgZGQCBg8PFgIfBAUCNjRkZAIHDw8WAh8EBQI2MGRkAggPDxYCHwQFAjEwZGQCCQ8PFgIfBAUCMzJkZAIKDw8WAh8EBQIzMmRkAgsPDxYCHwQFoQIoMS0xNuWRqCk8YnI+6KGM6K++5a6J5o6S5Li656ysMS0xNuWRqCzlhbbkuK06PGJyPgrmmJ/mnJ/kuowgIOesrDPoioItLeesrDToioI8YnI+CuS4nOS4iumZojQwMigxLTE25ZGoKSDnvZfliKnmlocoMS0xNuWRqCk8YnI+CuS4nOS4iumZojQwMigxLTE25ZGoKSDpgrXnvqQoMS0xNuWRqCk8YnI+CuaYn+acn+WbmyAg56ysMeiKgi0t56ysMuiKgjxicj4K5Lic5LiK6ZmiNDAyKDEtMTblkagpIOe9l+WIqeaWhygxLTE25ZGoKTxicj4K5Lic5LiK6ZmiNDAyKDEtMTblkagpIOmCtee+pCgxLTE25ZGoKTxicj4KZGQCDA8PFgIfBAWIAuWPjOivreaOiOivviAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRkAg0PDxYCHwQFDOS6uuaVsOacqua7oWRkAg4PDxYCHwQFATFkZAIPDw8WAh8EBQExZGQCEA8PFgIfBAUJMjAxNi0yMDE3ZGQCEQ8PFgIfBAUBMmRkAhIPDxYCHwQFBDIyNzZkZAIKD2QWJmYPZBYCAgEPDxYCHwQFMzxpbnB1dCB0eXBlPXJhZGlvIG5hbWU9J215cmFkaW9ncm91cCcgdmFsdWU9MzgxNzg4PmRkAgEPDxYCHwQFBjM4MTc4OGRkAgIPDxYCHwQFCkVFMjEzICAgICBkZAIDDw8WAh8EBQnotbXlv6DljY5kZAIEDw8WAh8EBRvlia/mlZnmjoggICAgICAgICAgICAgICAgICBkZAIFDw8WAh8EBTUwMTAtKDIwMTYtMjAxNy0yKUVFMjEzKOaVmeWtpuePrSkgICAgICAgICAgICAgICAgICAgIGRkAgYPDxYCHwQFAjY0ZGQCBw8PFgIfBAUCNjVkZAIIDw8WAh8EBQIxMGRkAgkPDxYCHwQFAjYzZGQCCg8PFgIfBAUCNjNkZAILDw8WAh8EBZUCKDEtMTblkagpPGJyPuihjOivvuWuieaOkuS4uuesrDEtMTblkags5YW25LitOjxicj4K5pif5pyf5LiJICDnrKwx6IqCLS3nrKwy6IqCPGJyPgrkuK3pmaI0MDUoMS0xNuWRqCkg6YK1576kKDEtMTblkagpPGJyPgrkuK3pmaI0MDUoMS0xNuWRqCkg6LW15b+g5Y2OKDEtMTblkagpPGJyPgrmmJ/mnJ/kupQgIOesrDPoioItLeesrDToioI8YnI+CuS4remZojQwNSgxLTE25ZGoKSDpgrXnvqQoMS0xNuWRqCk8YnI+CuS4remZojQwNSgxLTE25ZGoKSDotbXlv6DljY4oMS0xNuWRqCk8YnI+CmRkAgwPDxYCHwQFBiZuYnNwO2RkAg0PDxYCHwQFDOS6uuaVsOacqua7oWRkAg4PDxYCHwQFATFkZAIPDw8WAh8EBQExZGQCEA8PFgIfBAUJMjAxNi0yMDE3ZGQCEQ8PFgIfBAUBMmRkAhIPDxYCHwQFBTAxMTA3ZGRk5s7z/kVsAQKlxvq1fvktouQAm7M=" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F0FD71F5" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBwKlgd23CQKGp67DDgKV1aTMBgL15/CHCwLNk+rqAwKTuv28BgKQjazEClL6STYhrgMHMgxGjmdTMtPsxLwv" />
+			<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="80" class="tit">课程安排</td>
+					<td><img src="../imgs/arrowdown.gif" width="18" height="18"></td>
+				</tr>
+				<tr>
+					<td colspan="2" bgcolor="#CECFCE" height="1"></td>
+				</tr>
+				<tr>
+					<td colspan="2" height="5"></td>
+				</tr>
+			</table>
+			<TABLE id="Table1" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<TR>
+					<TD>
+						
+<table id="Table2" cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+	<tr>
+		<td>
+		</td>
+	</tr>
+	<TR>
+		<TD>
+			<table class="alltab" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<tr>
+					<td><table cellspacing="1" rules="all" border="0" id="LessonTime1_gridMain" width="100%">
+	<tr class="tdtit">
+		<td>&nbsp;</td><td>教师姓名</td><td>职称</td><td>课号</td><td>学时</td><td>计划人数</td><td>最低人数</td><td>已选人数</td><td>确定人数</td><td>周安排</td><td>备注</td><td><font color="Red">提示</font></td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl02_Label2"><input type=radio name='myradiogroup' value=381778></span>
+									</td><td>方向忠</td><td>教授                    </td><td class="en">001-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">60</td><td class="en">10</td><td class="en">60</td><td class="en">60</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期一  第9节--第10节<br>
+中院110(1-16周) 方向忠(1-16周)<br>
+中院110(1-16周) 邵群(1-16周)<br>
+星期三  第1节--第2节<br>
+中院110(1-16周) 方向忠(1-16周)<br>
+中院110(1-16周) 邵群(1-16周)<br>
+</td><td>双语授课                                                                                                                                                                                                                                                            </td><td>人数满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl03_Label2"><input type=radio name='myradiogroup' value=381779></span>
+									</td><td>殳国华</td><td>副教授                  </td><td class="en">002-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">60</td><td class="en">10</td><td class="en">61</td><td class="en">60</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期一  第9节--第10节<br>
+中院209(1-16周) 邵群(1-16周)<br>
+中院209(1-16周) 殳国华(1-16周)<br>
+星期三  第1节--第2节<br>
+中院209(1-16周) 邵群(1-16周)<br>
+中院209(1-16周) 殳国华(1-16周)<br>
+</td><td>&nbsp;</td><td>人数满</td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl04_Label2"><input type=radio name='myradiogroup' value=381781></span>
+									</td><td>茅旭初</td><td>副教授                  </td><td class="en">003-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">60</td><td class="en">10</td><td class="en">39</td><td class="en">39</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期一  第9节--第10节<br>
+下院306(1-16周) 茅旭初(1-16周)<br>
+下院306(1-16周) 邵群(1-16周)<br>
+星期三  第1节--第2节<br>
+下院306(1-16周) 茅旭初(1-16周)<br>
+下院306(1-16周) 邵群(1-16周)<br>
+</td><td>&nbsp;</td><td>人数未满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl05_Label2"><input type=radio name='myradiogroup' value=381782></span>
+									</td><td>朱兰娟</td><td>副教授                  </td><td class="en">004-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">70</td><td class="en">10</td><td class="en">70</td><td class="en">70</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期二  第3节--第4节<br>
+下院209(1-16周) 朱兰娟(1-16周)<br>
+下院209(1-16周) 邵群(1-16周)<br>
+星期五  第1节--第2节<br>
+下院207(1-16周) 朱兰娟(1-16周)<br>
+下院207(1-16周) 邵群(1-16周)<br>
+</td><td>&nbsp;</td><td>人数满</td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl06_Label2"><input type=radio name='myradiogroup' value=381783></span>
+									</td><td>毛义梅</td><td>副教授                  </td><td class="en">005-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">70</td><td class="en">10</td><td class="en">71</td><td class="en">70</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期二  第3节--第4节<br>
+东上院203(1-16周) 毛义梅(1-16周)<br>
+东上院203(1-16周) 邵群(1-16周)<br>
+星期五  第1节--第2节<br>
+东上院203(1-16周) 毛义梅(1-16周)<br>
+东上院203(1-16周) 邵群(1-16周)<br>
+</td><td>&nbsp;</td><td>人数满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl07_Label2"><input type=radio name='myradiogroup' value=381784></span>
+									</td><td>翁正新</td><td>副教授                  </td><td class="en">006-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">70</td><td class="en">10</td><td class="en">53</td><td class="en">53</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期二  第3节--第4节<br>
+东上院102(1-16周) 邵群(1-16周)<br>
+东上院102(1-16周) 翁正新(1-16周)<br>
+星期五  第1节--第2节<br>
+东上院102(1-16周) 邵群(1-16周)<br>
+东上院102(1-16周) 翁正新(1-16周)<br>
+</td><td>&nbsp;</td><td>人数未满</td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl08_Label2"><input type=radio name='myradiogroup' value=381785></span>
+									</td><td>田社平</td><td>副教授                  </td><td class="en">007-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">60</td><td class="en">10</td><td class="en">60</td><td class="en">60</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期二  第3节--第4节<br>
+中院109(1-16周) 邵群(1-16周)<br>
+中院109(1-16周) 田社平(1-16周)<br>
+星期四  第1节--第2节<br>
+中院109(1-16周) 邵群(1-16周)<br>
+中院109(1-16周) 田社平(1-16周)<br>
+</td><td>&nbsp;</td><td>人数满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl09_Label2"><input type=radio name='myradiogroup' value=381786></span>
+									</td><td>何浩</td><td>助理研究员              </td><td class="en">008-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">60</td><td class="en">10</td><td class="en">59</td><td class="en">59</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期二  第3节--第4节<br>
+中院110(1-16周) 何浩(1-16周)<br>
+中院110(1-16周) 邵群(1-16周)<br>
+星期四  第1节--第2节<br>
+中院105(1-16周) 何浩(1-16周)<br>
+中院105(1-16周) 邵群(1-16周)<br>
+</td><td>&nbsp;</td><td>人数未满</td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl10_Label2"><input type=radio name='myradiogroup' value=381787></span>
+									</td><td>罗利文</td><td>副教授                  </td><td class="en">009-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">60</td><td class="en">10</td><td class="en">32</td><td class="en">32</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期二  第3节--第4节<br>
+东上院402(1-16周) 罗利文(1-16周)<br>
+东上院402(1-16周) 邵群(1-16周)<br>
+星期四  第1节--第2节<br>
+东上院402(1-16周) 罗利文(1-16周)<br>
+东上院402(1-16周) 邵群(1-16周)<br>
+</td><td>双语授课                                                                                                                                                                                                                                                            </td><td>人数未满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl11_Label2"><input type=radio name='myradiogroup' value=381788></span>
+									</td><td>赵忠华</td><td>副教授                  </td><td class="en">010-(2016-2017-2)EE213(教学班)                    </td><td class="en">64</td><td class="en">65</td><td class="en">10</td><td class="en">63</td><td class="en">63</td><td>(1-16周)<br>行课安排为第1-16周,其中:<br>
+星期三  第1节--第2节<br>
+中院405(1-16周) 邵群(1-16周)<br>
+中院405(1-16周) 赵忠华(1-16周)<br>
+星期五  第3节--第4节<br>
+中院405(1-16周) 邵群(1-16周)<br>
+中院405(1-16周) 赵忠华(1-16周)<br>
+</td><td>&nbsp;</td><td>人数未满</td>
+	</tr>
+</table></td>
+				</tr>
+			</table>
+		</TD>
+	</TR>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+			<table cellSpacing="3" cellPadding="0" border="0" align="center">
+				<tr>
+					<td><input type="submit" name="LessonTime1$btnSchedule" value="查看课程教学安排(推荐教材及参考书)" id="LessonTime1_btnSchedule" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnPerLesson" value="查看课程安排情况" id="LessonTime1_btnPerLesson" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnTeacherInfo" value="查看教师信息" id="LessonTime1_btnTeacherInfo" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnChoose" value="选定此教师" id="LessonTime1_btnChoose" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnCancel" value="取消选定" id="LessonTime1_btnCancel" class="button" /></td>
+					<td><input name="LessonTime1$Button1" type="button" id="LessonTime1_Button1" class="button" onclick="javascript:history.back()" value="返 回" /></td>
+					<td></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</TD>
+				</TR>
+			</TABLE>
+		</form>
+	</body>
+</HTML>

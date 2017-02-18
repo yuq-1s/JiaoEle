@@ -1,0 +1,114 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+	<HEAD>
+		<title>viewLesson</title>
+		<meta name="GENERATOR" Content="Microsoft Visual Studio 7.0">
+		<meta name="CODE_LANGUAGE" Content="C#">
+		<meta name="vs_defaultClientScript" content="JavaScript">
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+		<LINK href="../include/main.css" type="text/css" rel="stylesheet">
+		<LINK href="../include/style.css" type="text/css" rel="stylesheet">
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+	</HEAD>
+	<body MS_POSITIONING="GridLayout" leftmargin="0" topmargin="0">
+		<form name="viewLesson" method="post" action="viewLessonArrange.aspx?kcdm=EE308+++++&amp;xklx=%u9009%u4fee&amp;redirectForm=outSpeltyEp.aspx&amp;yxdm=03000&amp;nj=2014&amp;kcmk=-1&amp;txkmk=-1" id="viewLesson">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJMzg0ODEwOTgwD2QWAgIBD2QWAgIBD2QWAgIBDzwrAAsBAA8WCB4IRGF0YUtleXMWBAUKRUUzMDggICAgIAUKRUUzMDggICAgIAUKRUUzMDggICAgIAUKRUUzMDggICAgIB4LXyFJdGVtQ291bnQCBB4JUGFnZUNvdW50AgEeFV8hRGF0YVNvdXJjZUl0ZW1Db3VudAIEZBYCZg9kFggCAQ9kFiZmD2QWAgIBDw8WAh4EVGV4dAUzPGlucHV0IHR5cGU9cmFkaW8gbmFtZT0nbXlyYWRpb2dyb3VwJyB2YWx1ZT0zODAwNTE+ZGQCAQ8PFgIfBAUGMzgwMDUxZGQCAg8PFgIfBAUKRUUzMDggICAgIGRkAgMPDxYCHwQFCemCsOiDveeBtWRkAgQPDxYCHwQFGuaVmeaOiCAgICAgICAgICAgICAgICAgICAgZGQCBQ8PFgIfBAU1MDAxLSgyMDE2LTIwMTctMilFRTMwOCjmlZnlrabnj60pICAgICAgICAgICAgICAgICAgICBkZAIGDw8WAh8EBQI1MWRkAgcPDxYCHwQFAjQ1ZGQCCA8PFgIfBAUCMTBkZAIJDw8WAh8EBQI0NWRkAgoPDxYCHwQFAjQ1ZGQCCw8PFgIfBAXRASgxLTEy5ZGoKTxicj7ooYzor77lronmjpLkuLrnrKwxLTEy5ZGoLOWFtuS4rTo8YnI+CuaYn+acn+S6jCAg56ysMeiKgi0t56ysMuiKgjxicj4K5Lic5Lit6ZmiMy0zMDMoMS0xMuWRqCkg6YKw6IO954G1KDEtMTLlkagpPGJyPgrmmJ/mnJ/kupQgIOesrDPoioItLeesrDToioI8YnI+CuS4nOS4remZojMtMzAzKDEtMTLlkagpIOmCsOiDveeBtSgxLTEy5ZGoKTxicj4KZGQCDA8PFgIfBAWTAuWFgeiuuOeUtemZoklFRUXnlLXmsJTmlrnlkJHkuInlubTnuqflrabnlJ/pgInkv64gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGQCDQ8PFgIfBAUJ5Lq65pWw5ruhZGQCDg8PFgIfBAUBMWRkAg8PDxYCHwQFATFkZAIQDw8WAh8EBQkyMDE2LTIwMTdkZAIRDw8WAh8EBQEyZGQCEg8PFgIfBAUFMDg2OTVkZAICD2QWJmYPZBYCAgEPDxYCHwQFMzxpbnB1dCB0eXBlPXJhZGlvIG5hbWU9J215cmFkaW9ncm91cCcgdmFsdWU9MzgwMDUyPmRkAgEPDxYCHwQFBjM4MDA1MmRkAgIPDxYCHwQFCkVFMzA4ICAgICBkZAIDDw8WAh8EBQnojIPmmKXoj4pkZAIEDw8WAh8EBRvlia/mlZnmjoggICAgICAgICAgICAgICAgICBkZAIFDw8WAh8EBTUwMDItKDIwMTYtMjAxNy0yKUVFMzA4KOaVmeWtpuePrSkgICAgICAgICAgICAgICAgICAgIGRkAgYPDxYCHwQFAjUxZGQCBw8PFgIfBAUCNDVkZAIIDw8WAh8EBQIxMGRkAgkPDxYCHwQFAjQ2ZGQCCg8PFgIfBAUCNDVkZAILDw8WAh8EBdEBKDEtMTLlkagpPGJyPuihjOivvuWuieaOkuS4uuesrDEtMTLlkags5YW25LitOjxicj4K5pif5pyf5LqMICDnrKwx6IqCLS3nrKwy6IqCPGJyPgrkuJzkuK3pmaIzLTIwMygxLTEy5ZGoKSDojIPmmKXoj4ooMS0xMuWRqCk8YnI+CuaYn+acn+S6lCAg56ysM+iKgi0t56ysNOiKgjxicj4K5Lic5Lit6ZmiMy0yMDMoMS0xMuWRqCkg6IyD5pil6I+KKDEtMTLlkagpPGJyPgpkZAIMDw8WAh8EBZMC5YWB6K6455S16ZmiSUVFReeUteawlOaWueWQkeS4ieW5tOe6p+WtpueUn+mAieS/riAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZAINDw8WAh8EBQnkurrmlbDmu6FkZAIODw8WAh8EBQExZGQCDw8PFgIfBAUBMWRkAhAPDxYCHwQFCTIwMTYtMjAxN2RkAhEPDxYCHwQFATJkZAISDw8WAh8EBQoxMDI0ODkzNTgxZGQCAw9kFiZmD2QWAgIBDw8WAh8EBTM8aW5wdXQgdHlwZT1yYWRpbyBuYW1lPSdteXJhZGlvZ3JvdXAnIHZhbHVlPTM4MDA1Mz5kZAIBDw8WAh8EBQYzODAwNTNkZAICDw8WAh8EBQpFRTMwOCAgICAgZGQCAw8PFgIfBAUJ5byg5rKb6LaFZGQCBA8PFgIfBAUb5Ymv5pWZ5o6IICAgICAgICAgICAgICAgICAgZGQCBQ8PFgIfBAU1MDAzLSgyMDE2LTIwMTctMilFRTMwOCjmlZnlrabnj60pICAgICAgICAgICAgICAgICAgICBkZAIGDw8WAh8EBQI1MWRkAgcPDxYCHwQFAjQ1ZGQCCA8PFgIfBAUCMTBkZAIJDw8WAh8EBQI0NWRkAgoPDxYCHwQFAjQ1ZGQCCw8PFgIfBAXNASgxLTEy5ZGoKTxicj7ooYzor77lronmjpLkuLrnrKwxLTEy5ZGoLOWFtuS4rTo8YnI+CuaYn+acn+S6jCAg56ysMeiKgi0t56ysMuiKgjxicj4K5Lic5LiK6ZmiMjA1KDEtMTLlkagpIOW8oOaym+i2hSgxLTEy5ZGoKTxicj4K5pif5pyf5LqUICDnrKwz6IqCLS3nrKw06IqCPGJyPgrkuJzkuIrpmaIyMDUoMS0xMuWRqCkg5byg5rKb6LaFKDEtMTLlkagpPGJyPgpkZAIMDw8WAh8EBZMC5YWB6K6455S16ZmiSUVFReeUteawlOaWueWQkeS4ieW5tOe6p+WtpueUn+mAieS/riAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZAINDw8WAh8EBQnkurrmlbDmu6FkZAIODw8WAh8EBQExZGQCDw8PFgIfBAUBMWRkAhAPDxYCHwQFCTIwMTYtMjAxN2RkAhEPDxYCHwQFATJkZAISDw8WAh8EBQQ2MjI1ZGQCBA9kFiZmD2QWAgIBDw8WAh8EBTM8aW5wdXQgdHlwZT1yYWRpbyBuYW1lPSdteXJhZGlvZ3JvdXAnIHZhbHVlPTM4MDA1ND5kZAIBDw8WAh8EBQYzODAwNTRkZAICDw8WAh8EBQpFRTMwOCAgICAgZGQCAw8PFgIfBAUG6IOh54KOZGQCBA8PFgIfBAUc5Ymv56CU56m25ZGYICAgICAgICAgICAgICAgIGRkAgUPDxYCHwQFNTAwNC0oMjAxNi0yMDE3LTIpRUUzMDgo5pWZ5a2m54+tKSAgICAgICAgICAgICAgICAgICAgZGQCBg8PFgIfBAUCNTFkZAIHDw8WAh8EBQI0NWRkAggPDxYCHwQFAjEwZGQCCQ8PFgIfBAUCMjZkZAIKDw8WAh8EBQIyNmRkAgsPDxYCHwQFxwEoMS0xMuWRqCk8YnI+6KGM6K++5a6J5o6S5Li656ysMS0xMuWRqCzlhbbkuK06PGJyPgrmmJ/mnJ/kuowgIOesrDHoioItLeesrDLoioI8YnI+CuS4nOS4iumZojIwNCgxLTEy5ZGoKSDog6Hngo4oMS0xMuWRqCk8YnI+CuaYn+acn+S6lCAg56ysM+iKgi0t56ysNOiKgjxicj4K5Lic5LiK6ZmiMjA0KDEtMTLlkagpIOiDoeeCjigxLTEy5ZGoKTxicj4KZGQCDA8PFgIfBAWTAuWFgeiuuOeUtemZoklFRUXnlLXmsJTmlrnlkJHkuInlubTnuqflrabnlJ/pgInkv64gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGQCDQ8PFgIfBAUM5Lq65pWw5pyq5ruhZGQCDg8PFgIfBAUBMWRkAg8PDxYCHwQFATFkZAIQDw8WAh8EBQkyMDE2LTIwMTdkZAIRDw8WAh8EBQEyZGQCEg8PFgIfBAUFNTAxNzVkZGTLkQUDakd3YGMCIN6fgnhNfeS49Q==" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F0FD71F5" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBwKprNC7AwKGp67DDgKV1aTMBgL15/CHCwLNk+rqAwKTuv28BgKQjazECm5GLEuHA7H2G7jGjOatdHST5CQT" />
+			<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="80" class="tit">课程安排</td>
+					<td><img src="../imgs/arrowdown.gif" width="18" height="18"></td>
+				</tr>
+				<tr>
+					<td colspan="2" bgcolor="#CECFCE" height="1"></td>
+				</tr>
+				<tr>
+					<td colspan="2" height="5"></td>
+				</tr>
+			</table>
+			<TABLE id="Table1" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<TR>
+					<TD>
+						
+<table id="Table2" cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+	<tr>
+		<td>
+		</td>
+	</tr>
+	<TR>
+		<TD>
+			<table class="alltab" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<tr>
+					<td><table cellspacing="1" rules="all" border="0" id="LessonTime1_gridMain" width="100%">
+	<tr class="tdtit">
+		<td>&nbsp;</td><td>教师姓名</td><td>职称</td><td>课号</td><td>学时</td><td>计划人数</td><td>最低人数</td><td>已选人数</td><td>确定人数</td><td>周安排</td><td>备注</td><td><font color="Red">提示</font></td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl02_Label2"><input type=radio name='myradiogroup' value=380051></span>
+									</td><td>邰能灵</td><td>教授                    </td><td class="en">001-(2016-2017-2)EE308(教学班)                    </td><td class="en">51</td><td class="en">45</td><td class="en">10</td><td class="en">45</td><td class="en">45</td><td>(1-12周)<br>行课安排为第1-12周,其中:<br>
+星期二  第1节--第2节<br>
+东中院3-303(1-12周) 邰能灵(1-12周)<br>
+星期五  第3节--第4节<br>
+东中院3-303(1-12周) 邰能灵(1-12周)<br>
+</td><td>允许电院IEEE电气方向三年级学生选修                                                                                                                                                                                                                                  </td><td>人数满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl03_Label2"><input type=radio name='myradiogroup' value=380052></span>
+									</td><td>范春菊</td><td>副教授                  </td><td class="en">002-(2016-2017-2)EE308(教学班)                    </td><td class="en">51</td><td class="en">45</td><td class="en">10</td><td class="en">46</td><td class="en">45</td><td>(1-12周)<br>行课安排为第1-12周,其中:<br>
+星期二  第1节--第2节<br>
+东中院3-203(1-12周) 范春菊(1-12周)<br>
+星期五  第3节--第4节<br>
+东中院3-203(1-12周) 范春菊(1-12周)<br>
+</td><td>允许电院IEEE电气方向三年级学生选修                                                                                                                                                                                                                                  </td><td>人数满</td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl04_Label2"><input type=radio name='myradiogroup' value=380053></span>
+									</td><td>张沛超</td><td>副教授                  </td><td class="en">003-(2016-2017-2)EE308(教学班)                    </td><td class="en">51</td><td class="en">45</td><td class="en">10</td><td class="en">45</td><td class="en">45</td><td>(1-12周)<br>行课安排为第1-12周,其中:<br>
+星期二  第1节--第2节<br>
+东上院205(1-12周) 张沛超(1-12周)<br>
+星期五  第3节--第4节<br>
+东上院205(1-12周) 张沛超(1-12周)<br>
+</td><td>允许电院IEEE电气方向三年级学生选修                                                                                                                                                                                                                                  </td><td>人数满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl05_Label2"><input type=radio name='myradiogroup' value=380054></span>
+									</td><td>胡炎</td><td>副研究员                </td><td class="en">004-(2016-2017-2)EE308(教学班)                    </td><td class="en">51</td><td class="en">45</td><td class="en">10</td><td class="en">26</td><td class="en">26</td><td>(1-12周)<br>行课安排为第1-12周,其中:<br>
+星期二  第1节--第2节<br>
+东上院204(1-12周) 胡炎(1-12周)<br>
+星期五  第3节--第4节<br>
+东上院204(1-12周) 胡炎(1-12周)<br>
+</td><td>允许电院IEEE电气方向三年级学生选修                                                                                                                                                                                                                                  </td><td>人数未满</td>
+	</tr>
+</table></td>
+				</tr>
+			</table>
+		</TD>
+	</TR>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+			<table cellSpacing="3" cellPadding="0" border="0" align="center">
+				<tr>
+					<td><input type="submit" name="LessonTime1$btnSchedule" value="查看课程教学安排(推荐教材及参考书)" id="LessonTime1_btnSchedule" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnPerLesson" value="查看课程安排情况" id="LessonTime1_btnPerLesson" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnTeacherInfo" value="查看教师信息" id="LessonTime1_btnTeacherInfo" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnChoose" value="选定此教师" id="LessonTime1_btnChoose" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnCancel" value="取消选定" id="LessonTime1_btnCancel" class="button" /></td>
+					<td><input name="LessonTime1$Button1" type="button" id="LessonTime1_Button1" class="button" onclick="javascript:history.back()" value="返 回" /></td>
+					<td></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</TD>
+				</TR>
+			</TABLE>
+		</form>
+	</body>
+</HTML>

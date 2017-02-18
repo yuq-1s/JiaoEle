@@ -1,0 +1,106 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<HTML>
+	<HEAD>
+		<title>viewLesson</title>
+		<meta name="GENERATOR" Content="Microsoft Visual Studio 7.0">
+		<meta name="CODE_LANGUAGE" Content="C#">
+		<meta name="vs_defaultClientScript" content="JavaScript">
+		<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+		<LINK href="../include/main.css" type="text/css" rel="stylesheet">
+		<LINK href="../include/style.css" type="text/css" rel="stylesheet">
+		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+	</HEAD>
+	<body MS_POSITIONING="GridLayout" leftmargin="0" topmargin="0">
+		<form name="viewLesson" method="post" action="viewLessonArrange.aspx?kcdm=TH010+++++&amp;xklx=%u9009%u4fee&amp;redirectForm=outSpeltyEp.aspx&amp;yxdm=50501&amp;nj=2016&amp;kcmk=-1&amp;txkmk=-1" id="viewLesson">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJMzg0ODEwOTgwD2QWAgIBD2QWAgIBD2QWAgIBDzwrAAsBAA8WCB4IRGF0YUtleXMWBAUKVEgwMTAgICAgIAUKVEgwMTAgICAgIAUKVEgwMTAgICAgIAUKVEgwMTAgICAgIB4LXyFJdGVtQ291bnQCBB4JUGFnZUNvdW50AgEeFV8hRGF0YVNvdXJjZUl0ZW1Db3VudAIEZBYCZg9kFggCAQ9kFiZmD2QWAgIBDw8WAh4EVGV4dAUzPGlucHV0IHR5cGU9cmFkaW8gbmFtZT0nbXlyYWRpb2dyb3VwJyB2YWx1ZT0zODI2Mjk+ZGQCAQ8PFgIfBAUGMzgyNjI5ZGQCAg8PFgIfBAUKVEgwMTAgICAgIGRkAgMPDxYCHwQFBumXq+aIkGRkAgQPDxYCHwQFHOiusuW4iCjpq5jmoKEpICAgICAgICAgICAgICBkZAIFDw8WAh8EBTUwMDEtKDIwMTYtMjAxNy0yKVRIMDEwKOaVmeWtpuePrSkgICAgICAgICAgICAgICAgICAgIGRkAgYPDxYCHwQFAjQ4ZGQCBw8PFgIfBAUDODAwZGQCCA8PFgIfBAUCMTBkZAIJDw8WAh8EBQM3NDNkZAIKDw8WAh8EBQM3MzNkZAILDw8WAh8EBYUBKDIzLTI45ZGoKTxicj7ooYzor77lronmjpLkuLrnrKwyM+WRqCAtLS0g56ysMjjlkags5YW25LitOjxicj4K5pif5pyf5pelICDnrKw16IqCLS3nrKw26IqCPGJyPgouKDIzLTI45ZGoKS7pl6vmiJAg6K6y5biIKOmrmOagoSk8YnI+CmRkAgwPDxYCHwQFhgLmmpHlgYcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGQCDQ8PFgIfBAUM5Lq65pWw5pyq5ruhZGQCDg8PFgIfBAUBMWRkAg8PDxYCHwQFAjIzZGQCEA8PFgIfBAUJMjAxNi0yMDE3ZGQCEQ8PFgIfBAUBMmRkAhIPDxYCHwQFBTEwMTI3ZGQCAg9kFiZmD2QWAgIBDw8WAh8EBTM8aW5wdXQgdHlwZT1yYWRpbyBuYW1lPSdteXJhZGlvZ3JvdXAnIHZhbHVlPTM4MjYzMT5kZAIBDw8WAh8EBQYzODI2MzFkZAICDw8WAh8EBQpUSDAxMCAgICAgZGQCAw8PFgIfBAUG6Zer5oiQZGQCBA8PFgIfBAUc6K6y5biIKOmrmOagoSkgICAgICAgICAgICAgIGRkAgUPDxYCHwQFNTAwMi0oMjAxNi0yMDE3LTIpVEgwMTAo5pWZ5a2m54+tKSAgICAgICAgICAgICAgICAgICAgZGQCBg8PFgIfBAUCNDhkZAIHDw8WAh8EBQM4MDBkZAIIDw8WAh8EBQIxMGRkAgkPDxYCHwQFAzgwMGRkAgoPDxYCHwQFAzgwMGRkAgsPDxYCHwQFiAEoMjMtMjjlkagpPGJyPuihjOivvuWuieaOkuS4uuesrDIz5ZGoIC0tLSDnrKwyOOWRqCzlhbbkuK06PGJyPgrmmJ/mnJ/ml6UgIOesrDXoioItLeesrDboioI8YnI+Ci4oMjMtMjjlkagpLm5vIOmXq+aIkCDorrLluIgo6auY5qChKTxicj4KZGQCDA8PFgIfBAWGAuaakeWBhyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZAINDw8WAh8EBQnkurrmlbDmu6FkZAIODw8WAh8EBQExZGQCDw8PFgIfBAUCMjNkZAIQDw8WAh8EBQkyMDE2LTIwMTdkZAIRDw8WAh8EBQEyZGQCEg8PFgIfBAUFMTAxMjdkZAIDD2QWJmYPZBYCAgEPDxYCHwQFMzxpbnB1dCB0eXBlPXJhZGlvIG5hbWU9J215cmFkaW9ncm91cCcgdmFsdWU9MzgyNjMyPmRkAgEPDxYCHwQFBjM4MjYzMmRkAgIPDxYCHwQFClRIMDEwICAgICBkZAIDDw8WAh8EBQbpl6vmiJBkZAIEDw8WAh8EBRzorrLluIgo6auY5qChKSAgICAgICAgICAgICAgZGQCBQ8PFgIfBAU1MDAzLSgyMDE2LTIwMTctMilUSDAxMCjmlZnlrabnj60pICAgICAgICAgICAgICAgICAgICBkZAIGDw8WAh8EBQI0OGRkAgcPDxYCHwQFAzgwMGRkAggPDxYCHwQFAjEwZGQCCQ8PFgIfBAUDODAwZGQCCg8PFgIfBAUDODAwZGQCCw8PFgIfBAWFASgyMy0yOOWRqCk8YnI+6KGM6K++5a6J5o6S5Li656ysMjPlkaggLS0tIOesrDI45ZGoLOWFtuS4rTo8YnI+CuaYn+acn+aXpSAg56ysNeiKgi0t56ysNuiKgjxicj4KLigyMy0yOOWRqCku6Zer5oiQIOiusuW4iCjpq5jmoKEpPGJyPgpkZAIMDw8WAh8EBYYC5pqR5YGHICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRkAg0PDxYCHwQFCeS6uuaVsOa7oWRkAg4PDxYCHwQFATFkZAIPDw8WAh8EBQIyM2RkAhAPDxYCHwQFCTIwMTYtMjAxN2RkAhEPDxYCHwQFATJkZAISDw8WAh8EBQUxMDEyN2RkAgQPZBYmZg9kFgICAQ8PFgIfBAUzPGlucHV0IHR5cGU9cmFkaW8gbmFtZT0nbXlyYWRpb2dyb3VwJyB2YWx1ZT0zODI2MzM+ZGQCAQ8PFgIfBAUGMzgyNjMzZGQCAg8PFgIfBAUKVEgwMTAgICAgIGRkAgMPDxYCHwQFBumXq+aIkGRkAgQPDxYCHwQFHOiusuW4iCjpq5jmoKEpICAgICAgICAgICAgICBkZAIFDw8WAh8EBTUwMDQtKDIwMTYtMjAxNy0yKVRIMDEwKOaVmeWtpuePrSkgICAgICAgICAgICAgICAgICAgIGRkAgYPDxYCHwQFAjQ4ZGQCBw8PFgIfBAUDODAwZGQCCA8PFgIfBAUCMTBkZAIJDw8WAh8EBQM2NTVkZAIKDw8WAh8EBQM2NTVkZAILDw8WAh8EBYUBKDIzLTI45ZGoKTxicj7ooYzor77lronmjpLkuLrnrKwyM+WRqCAtLS0g56ysMjjlkags5YW25LitOjxicj4K5pif5pyf5pelICDnrKwx6IqCLS3nrKwy6IqCPGJyPgouKDIzLTI45ZGoKS7pl6vmiJAg6K6y5biIKOmrmOagoSk8YnI+CmRkAgwPDxYCHwQFhgLmmpHlgYcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGQCDQ8PFgIfBAUM5Lq65pWw5pyq5ruhZGQCDg8PFgIfBAUBMWRkAg8PDxYCHwQFAjIzZGQCEA8PFgIfBAUJMjAxNi0yMDE3ZGQCEQ8PFgIfBAUBMmRkAhIPDxYCHwQFBTEwMTI3ZGRkXY5Vh3U/wiSsKf0RSGQ7tXzsW5c=" />
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F0FD71F5" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWBwLX/aipAQKGp67DDgKV1aTMBgL15/CHCwLNk+rqAwKTuv28BgKQjazECvSTd/uXOipHqp6XC9Dowzzle2cJ" />
+			<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="80" class="tit">课程安排</td>
+					<td><img src="../imgs/arrowdown.gif" width="18" height="18"></td>
+				</tr>
+				<tr>
+					<td colspan="2" bgcolor="#CECFCE" height="1"></td>
+				</tr>
+				<tr>
+					<td colspan="2" height="5"></td>
+				</tr>
+			</table>
+			<TABLE id="Table1" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<TR>
+					<TD>
+						
+<table id="Table2" cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+	<tr>
+		<td>
+		</td>
+	</tr>
+	<TR>
+		<TD>
+			<table class="alltab" cellSpacing="0" cellPadding="0" width="100%" border="0">
+				<tr>
+					<td><table cellspacing="1" rules="all" border="0" id="LessonTime1_gridMain" width="100%">
+	<tr class="tdtit">
+		<td>&nbsp;</td><td>教师姓名</td><td>职称</td><td>课号</td><td>学时</td><td>计划人数</td><td>最低人数</td><td>已选人数</td><td>确定人数</td><td>周安排</td><td>备注</td><td><font color="Red">提示</font></td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl02_Label2"><input type=radio name='myradiogroup' value=382629></span>
+									</td><td>闫成</td><td>讲师(高校)              </td><td class="en">001-(2016-2017-2)TH010(教学班)                    </td><td class="en">48</td><td class="en">800</td><td class="en">10</td><td class="en">743</td><td class="en">733</td><td>(23-28周)<br>行课安排为第23周 --- 第28周,其中:<br>
+星期日  第5节--第6节<br>
+.(23-28周).闫成 讲师(高校)<br>
+</td><td>暑假                                                                                                                                                                                                                                                                </td><td>人数未满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl03_Label2"><input type=radio name='myradiogroup' value=382631></span>
+									</td><td>闫成</td><td>讲师(高校)              </td><td class="en">002-(2016-2017-2)TH010(教学班)                    </td><td class="en">48</td><td class="en">800</td><td class="en">10</td><td class="en">800</td><td class="en">800</td><td>(23-28周)<br>行课安排为第23周 --- 第28周,其中:<br>
+星期日  第5节--第6节<br>
+.(23-28周).no 闫成 讲师(高校)<br>
+</td><td>暑假                                                                                                                                                                                                                                                                </td><td>人数满</td>
+	</tr><tr class="tdcolour1">
+		<td>
+										<span id="LessonTime1_gridMain_ctl04_Label2"><input type=radio name='myradiogroup' value=382632></span>
+									</td><td>闫成</td><td>讲师(高校)              </td><td class="en">003-(2016-2017-2)TH010(教学班)                    </td><td class="en">48</td><td class="en">800</td><td class="en">10</td><td class="en">800</td><td class="en">800</td><td>(23-28周)<br>行课安排为第23周 --- 第28周,其中:<br>
+星期日  第5节--第6节<br>
+.(23-28周).闫成 讲师(高校)<br>
+</td><td>暑假                                                                                                                                                                                                                                                                </td><td>人数满</td>
+	</tr><tr class="tdcolour2">
+		<td>
+										<span id="LessonTime1_gridMain_ctl05_Label2"><input type=radio name='myradiogroup' value=382633></span>
+									</td><td>闫成</td><td>讲师(高校)              </td><td class="en">004-(2016-2017-2)TH010(教学班)                    </td><td class="en">48</td><td class="en">800</td><td class="en">10</td><td class="en">655</td><td class="en">655</td><td>(23-28周)<br>行课安排为第23周 --- 第28周,其中:<br>
+星期日  第1节--第2节<br>
+.(23-28周).闫成 讲师(高校)<br>
+</td><td>暑假                                                                                                                                                                                                                                                                </td><td>人数未满</td>
+	</tr>
+</table></td>
+				</tr>
+			</table>
+		</TD>
+	</TR>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+			<table cellSpacing="3" cellPadding="0" border="0" align="center">
+				<tr>
+					<td><input type="submit" name="LessonTime1$btnSchedule" value="查看课程教学安排(推荐教材及参考书)" id="LessonTime1_btnSchedule" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnPerLesson" value="查看课程安排情况" id="LessonTime1_btnPerLesson" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnTeacherInfo" value="查看教师信息" id="LessonTime1_btnTeacherInfo" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnChoose" value="选定此教师" id="LessonTime1_btnChoose" class="button" /></td>
+					<td><input type="submit" name="LessonTime1$btnCancel" value="取消选定" id="LessonTime1_btnCancel" class="button" /></td>
+					<td><input name="LessonTime1$Button1" type="button" id="LessonTime1_Button1" class="button" onclick="javascript:history.back()" value="返 回" /></td>
+					<td></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</TD>
+				</TR>
+			</TABLE>
+		</form>
+	</body>
+</HTML>
