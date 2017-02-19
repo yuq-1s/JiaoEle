@@ -2,10 +2,16 @@
 
 A helper tool for [sjtu course system](http://electsys.sjtu.edu.cn/edu/).
 
-- ~~This is my first attempt to contribute some code on github.~~
-- ~~The git log is in a horrible mess. So are branches~~
-- ~~I saperated this project into branches but don't know how to merge them.~~
-- ~~I have no knowledge on distutils currently.~~
+## Features
+
+- List all courses and search for some. With tab-completion
+![qname](demo/qname.gif)
+
+- Show all courses in a given period
+![period](demo/period.gif)
+
+- Show all courses all non-full courses currently
+![qnfull](demo/qnfull.gif)
 
 ## Installation
 
@@ -26,9 +32,11 @@ Try to meet the following (third-party) dependencies and clone this repository.
 
 ## Usage
 
-> $ python3 main.py `<username>` `<password>`
+```
+> $ ./main.py <username> <password>
 
 > $ help
+```
 
 ## TODO
 
@@ -78,3 +86,9 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## P.s.
+- ~~This is my first attempt to contribute some code on github.~~
+- ~~The git log is in a horrible mess. So are branches~~
+- ~~I saperated this project into branches but don't know how to merge them.~~
+- ~~I have no knowledge on distutils currently.~~
