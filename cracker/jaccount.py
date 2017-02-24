@@ -18,6 +18,14 @@ from io import BytesIO
 from pytesseract import image_to_string
 from logging import getLogger
 
+def find_between( s, first, last ):
+    try:
+        start = s.index( first ) + len( first )
+        end = s.index( last, start )
+        return s[start:end]
+    except ValueError:
+        return ""
+
 def tohttps(oriurl):
     prot, body = resp.request.url.split(':')
     return prot + 's' + body
@@ -67,7 +75,8 @@ def login(user, secret):
 
             logger.info("Login succeeded!")
             with open("cookie.txt", 'w') as f:
-                f.write(str(sess.cookies))
+                f.write(find_between(str(sess.cookies),
+                                     'ASP.NET_SessionId=', ' '))
             return sess# , prepare_form(sess)
         except TypeError:
             logger.warning("The %d attempt to login failed ..." % try_count)

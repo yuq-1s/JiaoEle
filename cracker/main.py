@@ -7,18 +7,24 @@ from current import parse_current
 from prettytable import PrettyTable
 from grabber import CourseGrabber, CourseReplacer
 from utils import asp_params, get_logger, parse_period
-from utils import SUBMIT_URL, MAIN_URL, REMOVE_URL
+from utils import SUBMIT_URL, MAIN_URL, REMOVE_URL, CookieInvalid
 from courses import are_overlap, contains
 from tqdm import tqdm
+from gtts import gTTS
+from pdb import set_trace
+from time import sleep
+# from urllib.parse import unquote
 
 import concurrent.futures
 import termcolor
+import random
 import xpinyin
 import json
 import sys
 import re
 import cmd
 import requests
+import pygame
 
 logger = get_logger(__name__)
 
@@ -53,10 +59,23 @@ class Main(cmd.Cmd):
         print('Trying to login...')
         # FIXME: Refresh should not use argv[3]
         try:
+            try:
+                self.__login_with_cookies(sys.argv[3])
+            except IndexError:
+                with open('cookie.txt') as f:
+                    self.__login_with_cookies(f.read())
+                print("Using cookie.txt...")
+        except (FileNotFoundError, CookieInvalid):
+            self.sess = login(self.user, self.passwd)
+            self.sess.head(MAIN_URL)
+
+        print('Login succeeded.')
+
+    def __login_with_cookies(self, cookies):
             my_cookie = {
                         "version":0,
                         "name":'ASP.NET_SessionId',
-                        "value":sys.argv[3],
+                        "value": cookies,
                         "port":None,
                         "domain":'www.mydomain.com',
                         "path":'/',
@@ -70,11 +89,9 @@ class Main(cmd.Cmd):
             }
             self.sess = requests.Session()
             self.sess.cookies.set(**my_cookie)
-            self.sess.head(MAIN_URL)
-        except IndexError:
-            self.sess = login(self.user, self.passwd)
-            self.sess.head(MAIN_URL)
-        print('Login succeeded.')
+            if 'outTimePage.aspx' in self.sess.get(MAIN_URL).url:
+                raise CookieInvalid
+            # self.sess.head(MAIN_URL)
 
     def _load_courses(self):
         print('Loading course file...')
@@ -100,6 +117,8 @@ class Main(cmd.Cmd):
 
         self.grabber = CourseGrabber(self)
         self.replacer = CourseReplacer(self)
+
+        pygame.mixer.init()
 
         print('Initializing succeeded!')
 
@@ -304,14 +323,40 @@ class Main(cmd.Cmd):
                     print(course['name']+'\t'+hour['weekday'],
                           hour['cbegin']+'-'+hour['cend'])
 
+    def _saynfull(self, last):
+        random.shuffle(self.courses)
+        for c in self.courses:
+            if c['name'] in last and self.is_full(c):
+                self._read_cn(c['name']+" 满了")
+                print(c['name']+" 满了")
+                last.remove(c['name'])
+
+            if c['name'] not in last and not self.is_full(c):
+                self._read_cn(c['name']+" 未满")
+                print(c['name']+" 未满")
+                last.add(c['name'])
+        return last
+
+    def do_saynfull(self, _):
+        ''' Speak out courses. '''
+        try:
+            last = set()
+            while True:
+                last = self._saynfull(last)
+                print(last)
+        except KeyboardInterrupt:
+            pass
+
     def is_full(self, course):
         # fail_message='%e8%af%a5%e8%af%be%e8%af%a5%e6%97%b6%e9%97%b4%e6%ae%b5%e4%ba%ba%e6%95%b0%e5%b7%b2%e6%bb%a1%ef%bc%81'
         resp = self.sess.post(url=course['url'], data=course['param'],
                               allow_redirects=False)
+        sleep(2)
+        # print(course['name'], unquote(resp.text))
         if 'messagePage.aspx' in resp.text:
-            return False
-        else:
             return True
+        else:
+            return False
 
     def do_submit(self, _):
         try:
@@ -329,6 +374,11 @@ class Main(cmd.Cmd):
     def do_is_replacing(self, _):
         print(not self.replacer.canceled)
 
+    def _read_cn(self, text):
+        if not text: return
+        gTTS(text=text, lang='zh-cn').save('temp.mp3')
+        pygame.mixer.music.load('temp.mp3')
+        pygame.mixer.music.play()
 
 if __name__ == '__main__':
     m1 = Main()

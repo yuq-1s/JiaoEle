@@ -109,3 +109,6 @@ class FrequencyError(Exception):
 
 class MessageError(Exception):
     pass
+
+class CookieInvalid(Exception):
+    pass

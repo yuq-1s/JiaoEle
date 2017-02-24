@@ -13,6 +13,8 @@ A helper tool for [sjtu course system](http://electsys.sjtu.edu.cn/edu/).
 - Show all courses all non-full courses currently
 ![qnfull](demo/qnfull.gif)
 
+*** This method has been banned.**
+
 ## Installation
 
 **TODO** -- Help! I have no knowledge on distutils now.
