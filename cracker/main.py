@@ -18,6 +18,7 @@ import json
 import sys
 import re
 import cmd
+import requests
 
 logger = get_logger(__name__)
 
@@ -48,9 +49,31 @@ class Main(cmd.Cmd):
         except IndexError:
             self.user = input('Jaccount username: ')
             self.passwd = input('Jaccount password: ')
+
         print('Trying to login...')
-        self.sess = login(self.user, self.passwd)
-        self.sess.head(MAIN_URL)
+        # FIXME: Refresh should not use argv[3]
+        try:
+            my_cookie = {
+                        "version":0,
+                        "name":'ASP.NET_SessionId',
+                        "value":sys.argv[3],
+                        "port":None,
+                        "domain":'www.mydomain.com',
+                        "path":'/',
+                        "secure":False,
+                        "expires":None,
+                        "discard":True,
+                        "comment":None,
+                        "comment_url":None,
+                        "rest":{},
+                        "rfc2109":False
+            }
+            self.sess = requests.Session()
+            self.sess.cookies.set(**my_cookie)
+            self.sess.head(MAIN_URL)
+        except IndexError:
+            self.sess = login(self.user, self.passwd)
+            self.sess.head(MAIN_URL)
         print('Login succeeded.')
 
     def _load_courses(self):

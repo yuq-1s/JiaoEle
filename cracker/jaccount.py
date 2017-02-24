@@ -66,6 +66,8 @@ def login(user, secret):
             sess.get(auth_url)
 
             logger.info("Login succeeded!")
+            with open("cookie.txt", 'w') as f:
+                f.write(str(sess.cookies))
             return sess# , prepare_form(sess)
         except TypeError:
             logger.warning("The %d attempt to login failed ..." % try_count)

@@ -13,10 +13,9 @@ ASP_FORM_ID = ['__VIEWSTATE', '__VIEWSTATEGENERATOR', '__EVENTVALIDATION',
 EDU_URL = 'http://electsys.sjtu.edu.cn/edu/'
 LESSON_URL = EDU_URL+'lesson/viewLessonArrange.aspx'
 ELECT_URL = EDU_URL+'student/elect/'
-MAIN_URL = ELECT_URL+'electcheck.aspx?xklc=2'
+MAIN_URL = ELECT_URL+'electcheck.aspx?xklc=3'
 REMOVE_URL = ELECT_URL+'removeLessonFast.aspx'
 SUBMIT_URL = ELECT_URL+'electSubmit.aspx'
-MAIN_URL = ELECT_URL+'electcheck.aspx?xklc=2'
 RECOMMAND_URL = ELECT_URL+'RecommandTblOuter.aspx'
 
 
